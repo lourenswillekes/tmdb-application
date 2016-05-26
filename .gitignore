@@ -1,4 +1,7 @@
+
 *.class
+*.jar
 
 .checkstyle
 .classpath
+

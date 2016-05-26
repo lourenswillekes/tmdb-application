@@ -1,3 +1,4 @@
 *.class
 
 .checkstyle
+.classpath

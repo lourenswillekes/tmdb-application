@@ -164,4 +164,33 @@ public class Test {
 			System.out.println();
 		}	
 	}
+	
+	
+	
+	
+	
+
+	static int MAX_MOVIE_ID = 400000;
+	private TmdbMovies movies = tmdbApi.getMovies();
+	
+	/**
+	 * This function randomly selects a movie and returns the object.
+	 * @return randMovie the randomly selected movie
+	 */
+	public final MovieDb getRandomMovie() {
+		
+		int randInt;
+		MovieDb randMovie = null;
+		Random rand = new Random();
+		do {	
+			try	{
+				randInt = rand.nextInt(MAX_MOVIE_ID);
+				randMovie = movies.getMovie(randInt, "en");
+			} catch (Exception e) {
+				
+			}
+		} while (null == randMovie);
+		
+		return randMovie;
+	}
 }

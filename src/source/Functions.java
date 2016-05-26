@@ -1,11 +1,11 @@
 package source;
 
-import info.movito.themoviedbapi.*;
-import info.movito.themoviedbapi.model.*;
-import info.movito.themoviedbapi.model.people.*;
-import info.movito.themoviedbapi.model.tv.*;
+import java.util.List;
 
-import java.util.Random;
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.TmdbSearch;
+import info.movito.themoviedbapi.model.MovieDb;
 
 /**
  * Class of all the functionality for the application.
@@ -14,9 +14,6 @@ import java.util.Random;
  *
  */
 public class Functions {
-	
-
-	public static int MAX_MOVIE_ID = 300000;
 	
 	/**
 	 * tmdbAPi object to access the database.
@@ -27,50 +24,74 @@ public class Functions {
 	 * Movie database object.
 	 */
 	private TmdbMovies movies = tmdbApi.getMovies();
-	/**
-	 * People database object.
-	 */
-	private TmdbPeople people = tmdbApi.getPeople();
-	/**
-	 * All TV series database object.
-	 */
-	private TmdbTV allSeries = tmdbApi.getTvSeries();
-	
-	
-	
 	
 	/**
-	 * This function randomly selects a movie and returns the object.
-	 * 
-	 * @return randMovie the randomly selected movie
+	 * Search database object.
 	 */
-	public final MovieDb getRandomMovie() {
-		
-		int randInt;
-		MovieDb randMovie = null;
-		Random rand = new Random();
-		do {	
-			try	{
-				randInt = rand.nextInt(MAX_MOVIE_ID);
-				randMovie = movies.getMovie(randInt, "en");
-			} catch (Exception e) {
-				
-			}
-		} while (null == randMovie);
-		
-		return randMovie;
-	}
+	private TmdbSearch search = tmdbApi.getSearch();
+	
 	
 	
 
+	
 	/**
-	 * Main function.
-	 * 
-	 * @param args .
+	 * This function returns a page from the popular movies list.
+	 * @param page of popular movies list
+	 * @return the list of popular movies from the requested page
 	 */
-	public static void main(final String[] args) {
-		
+	public final List<MovieDb> getPopularMovies(final int page) {
+		List<MovieDb> pop = movies.getPopularMovies("en", page).getResults();
+		return pop;
 	}
+
+
+	/**
+	 * This function returns a page from the upcoming movies list.
+	 * @param page of upcoming movies list
+	 * @return the list of upcoming movies from the requested page
+	 */
+	public final List<MovieDb> getUpcomingMovies(final int page) {
+		List<MovieDb> upc = movies.getUpcoming("en", page).getResults();
+		return upc;
+	}
+
+
+	/**
+	 * This function returns a page from the top rated movies list.
+	 * @param page of top rated movies list
+	 * @return the list of top rated movies from the requested page
+	 */
+	public final List<MovieDb> getTopRatedMovies(final int page) {
+		List<MovieDb> top = movies.getTopRatedMovies("en", page).getResults();
+		return top;
+	}
+	
+	
+	/**
+	 * This function returns a page from the now playing movies list.
+	 * @param page of now playing movies list
+	 * @return the list of now playing movies from the requested page
+	 */
+	public final List<MovieDb> getNowPlayingMovies(final int page) {
+		List<MovieDb> now = movies.getNowPlayingMovies("en", page).getResults();
+		return now;
+	}
+	
+	
+	/**
+	 * This function returns a page from the search results given String srch.
+	 * @param srch string to search for movies
+	 * @param page of the search results movies list
+	 * @return the list of movies from the search on the requested page
+	 */
+	public final List<MovieDb> getSearchRes(final String srch, final int page) {
+		List<MovieDb> searchRes = search.searchMovie(srch, 
+				0, "en", true, page).getResults();
+		return searchRes;
+	}
+	
+	
+	
 	
 	
 }

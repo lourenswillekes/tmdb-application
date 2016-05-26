@@ -15,15 +15,6 @@ import java.util.Random;
 
 public class FunctionTests {
 
-	static int MAX_MOVIE_ID = 400000;
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

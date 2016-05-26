@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/guava-19.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/jackson-annotations-2.7.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/jackson-core-2.7.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/jackson-databind-2.7.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/slf4j-api-1.7.21.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/slf4j-simple-1.7.21.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lourw_000/git/tmdb-application/themoviedbapi-1.3.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/jackson-annotations-2.7.4.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/jackson-core-2.7.4.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/jackson-databind-2.7.4.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/slf4j-simple-1.7.21.jar"/>
+	<classpathentry kind="lib" path="E:/CIS 350/tmdb-application/themoviedbapi-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

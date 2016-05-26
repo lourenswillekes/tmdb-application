@@ -1,9 +1,0 @@
-*.class
-
-*.jar
-
-.checkstyle
-.classpath
-.metadata/
-
-.settings/

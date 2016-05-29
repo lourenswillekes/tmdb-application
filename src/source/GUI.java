@@ -13,6 +13,7 @@ import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Label;
 import java.awt.Font;
@@ -89,6 +90,9 @@ public class GUI {
 	 * @throws IOException 
 	 */
 	private void initialize() throws IOException {
+		
+		Functions api = new Functions();
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 943, 545);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,13 +121,28 @@ public class GUI {
 		
 		tglbtnUpcoming.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				lblTab.setText("Top 20 Upcoming Films");
+				
+				List<MovieDb> popList = api.getUpcomingMovies(1);
+				for(int j = 0; j < 20; j++){
+					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
+					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
+					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+				}
 			}
 		});
 		
 		tglbtnPopular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				lblTab.setText("Top 20 Popular Films");
+				
+				List<MovieDb> popList = api.getPopularMovies(1);
+				for(int j = 0; j < 20; j++){
+					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
+					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
+					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+				}
+
 				
 				try {
 					displayMovieInfo(101);
@@ -131,13 +150,24 @@ public class GUI {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				lblTab.setText("Top 20 Popular Films");
+				
+				
+				
 			}
 		});
 		
 		tglbtnTopRated.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblTab.setText("Top 20 Top Rated Films");
+				
+				//TODO: Change this to NowPlaying when we get a new .jar.
+				List<MovieDb> popList = api.getPopularMovies(1);
+				for(int j = 0; j < 20; j++){
+					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
+					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
+					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+				}
+				
 			}
 		});
 		
@@ -157,6 +187,15 @@ public class GUI {
 		tglbtnNowPlaying.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblTab.setText("Top 20 Now Playing Films");
+				
+				//TODO: Change this to NowPlaying when we get a new .jar.
+				List<MovieDb> popList = api.getPopularMovies(1);
+				for(int j = 0; j < 20; j++){
+					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
+					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
+					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+				}
+				
 			}
 		});
 		

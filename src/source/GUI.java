@@ -127,7 +127,7 @@ public class GUI {
 				for(int j = 0; j < 20; j++){
 					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
 					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
 				}
 			}
 		});
@@ -140,16 +140,16 @@ public class GUI {
 				for(int j = 0; j < 20; j++){
 					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
 					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
 				}
 
 				
-				try {
-					displayMovieInfo(101);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+//				try {
+//					displayMovieInfo(101);
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
 				
 				
 				
@@ -165,7 +165,7 @@ public class GUI {
 				for(int j = 0; j < 20; j++){
 					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
 					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
 				}
 				
 			}
@@ -193,7 +193,7 @@ public class GUI {
 				for(int j = 0; j < 20; j++){
 					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
 					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getUserRating(), j, 3);
+					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
 				}
 				
 			}

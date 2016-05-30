@@ -53,8 +53,8 @@ public class GUI {
 	static JToggleButton tglbtnPopular;
 	static JToggleButton tglbtnTopRated;
 	static JToggleButton tglbtnSearch;
-	static JTable tblMovieList;
 	static JToggleButton tglbtnNowPlaying;
+	static JTable tblMovieList;
 	static JScrollPane spMovieList;
 	static JLabel lblMovieInfo;
 	static JLabel lblPlotDiscription;
@@ -62,8 +62,9 @@ public class GUI {
 
 	/**
 	 * Launch the application.
+	 * @param args vars
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -91,7 +92,7 @@ public class GUI {
 	 */
 	private void initialize() throws IOException {
 		
-		Functions api = new Functions();
+		ApiFunctions api = new ApiFunctions();
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 943, 545);
@@ -102,52 +103,48 @@ public class GUI {
 		displayMovieInfo(100);
 		
 		btnSelectRandom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				
 			}
 		});
 		
 		btnAddFav.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
+				// TODO: Add selected movie to Favorites. RELEASE 2.
 			}
 		});
 		
 		
 		btnAddWatch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(final ActionEvent e) {
+				// TODO: Add selected movie to Watchlist. RELEASE 2.
 			}
 		});
 		
-		tglbtnUpcoming.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblTab.setText("Top 20 Upcoming Films");
-				
-				List<MovieDb> popList = api.getUpcomingMovies(1);
-				for(int j = 0; j < 20; j++){
-					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
-					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
-				}
+		tglbtnNowPlaying.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnNowPlaying.setSelected(true);
+				//TODO: Change this to NowPlaying when we get a new .jar.
+				List<MovieDb> nowList = api.getPopularMovies(1);
+				fillMovieTable(nowList);
+				lblTab.setText("Top 20 Now Playing Films");
 			}
 		});
 		
 		tglbtnPopular.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblTab.setText("Top 20 Popular Films");
-				
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnPopular.setSelected(true);
 				List<MovieDb> popList = api.getPopularMovies(1);
-				for(int j = 0; j < 20; j++){
-					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
-					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
-				}
+				fillMovieTable(popList);
+				lblTab.setText("Top 20 Popular Films");
 
 				
 //				try {
 //					displayMovieInfo(101);
 //				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
+//					//TODO: Auto-generated catch block
 //					e1.printStackTrace();
 //				}
 				
@@ -157,22 +154,31 @@ public class GUI {
 		});
 		
 		tglbtnTopRated.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblTab.setText("Top 20 Top Rated Films");
-				
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnTopRated.setSelected(true);
 				//TODO: Change this to NowPlaying when we get a new .jar.
-				List<MovieDb> popList = api.getPopularMovies(1);
-				for(int j = 0; j < 20; j++){
-					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
-					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
-				}
+				List<MovieDb> topList = api.getPopularMovies(1);
+				fillMovieTable(topList);
+				lblTab.setText("Top 20 Top Rated Films");
 				
 			}
 		});
 		
+		tglbtnUpcoming.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnUpcoming.setSelected(true);
+				List<MovieDb> upcList = api.getUpcomingMovies(1);
+				fillMovieTable(upcList);
+				lblTab.setText("Top 20 Upcoming Films");
+			}
+		});
+		
+		
+		
 		tglbtnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				
 				x = new SearchGUI();
 				if (x.getCloseStatus() == false) {
@@ -184,22 +190,7 @@ public class GUI {
 			}
 		});
 		
-		tglbtnNowPlaying.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblTab.setText("Top 20 Now Playing Films");
-				
-				//TODO: Change this to NowPlaying when we get a new .jar.
-				List<MovieDb> popList = api.getPopularMovies(1);
-				for(int j = 0; j < 20; j++){
-					tblMovieList.getModel().setValueAt(popList.get(j).getTitle(), j, 1);
-					tblMovieList.getModel().setValueAt(popList.get(j).getReleaseDate(), j, 2);
-					tblMovieList.getModel().setValueAt(popList.get(j).getVoteAverage(), j, 3);
-				}
-				
-			}
-		});
-		
-		//Add action listener for tabel
+		//Add action listener for table
 	}
 	
 	public static void setMoviePoster(String posterPath) throws IOException {
@@ -261,6 +252,33 @@ public class GUI {
 	    
 	    frame.setContentPane(lblBackdrop);  
 	}
+	
+	
+	/**
+	 * fillMovieTable fills the table with the requested movies.
+	 * @param mov is the list returned from the API
+	 */
+	public static void fillMovieTable(final List<MovieDb> mov) {
+		int j;
+		for (j = 0; j < 20; j++) {
+			tblMovieList.getModel().setValueAt(mov.get(j).getTitle(), j, 1);
+			tblMovieList.getModel().setValueAt(mov.get(j).getReleaseDate(), j, 2);
+			tblMovieList.getModel().setValueAt(mov.get(j).getVoteAverage(), j, 3);
+			//tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
+		}
+	}
+	
+	/**
+	 * setButtonsFalse sets the state of all buttons to unselected.
+	 */
+	public static void setButtonsFalse() {
+		tglbtnNowPlaying.setSelected(false);
+		tglbtnPopular.setSelected(false);
+		tglbtnTopRated.setSelected(false);
+		tglbtnUpcoming.setSelected(false);
+		tglbtnTopRated.setSelected(false);
+	}
+	
 	
 	public static void CreateGUI() throws IOException {
 		

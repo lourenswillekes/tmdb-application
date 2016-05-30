@@ -1,11 +1,14 @@
 package source;
 
+import java.util.Iterator;
 import java.util.List;
 
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbSearch;
+import info.movito.themoviedbapi.TmdbMovies.MovieMethod;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.people.PersonCast;
 
 /**
  * Class of all the functionality for the application.
@@ -87,5 +90,29 @@ public class ApiFunctions {
 				0, "en", true, page).getResults();
 		return searchRes;
 	}
+	
+	public final String getMovieInfo(int movieCode) {
+		String movieInfo = new String("");
+		String temp = new String("");
+		
+		MovieDb movie = movies.getMovie(movieCode, "en" ,MovieMethod.credits, MovieMethod.reviews);
+		
+		// retrieve information on movie cast
+		List<PersonCast> cast = movie.getCast();
+		if (cast == null) {
+			temp = "Cast info not available for this movie";
+		} else {
+			Iterator<PersonCast> iterator = cast.iterator();
+			while (iterator.hasNext()) {
+				PersonCast person = iterator.next();
+				temp = (temp + person.getName() + "\n" + person.getCharacter() + "\n");
+			}
+		}		
+		movieInfo = "Title: \n" + movie.getTitle() + "\n\nRun Time:\n" + movie.getRuntime() + 
+				"\n\nRelease Date:\n" + movie.getReleaseDate() +"\n\nCast Info:\n" + temp;
+		
+		return movieInfo;
+	}
+	
 	
 }

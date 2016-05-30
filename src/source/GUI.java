@@ -63,6 +63,7 @@ public class GUI {
 	static List<MovieDb> popList;
 	static ApiFunctions api;
 	static List<MovieDb> movieList;
+	static String lblString;
 	
 
 	/**
@@ -106,11 +107,11 @@ public class GUI {
 		
 		CreateGUI();
 		
-		tglbtnPopular.setSelected(true);
 		//TODO: Change this to NowPlaying when we get a new .jar.
 		movieList = api.getPopularMovies(1);
 		fillMovieTable(movieList);
-		lblTab.setText("Top 20 Now Playing Films");
+		lblString = new String("Top 20 Popular Films");
+		lblTab.setText(lblString);
 		
 		String a = tblMovieList.getValueAt(0, 4).toString();
     	int b = Integer.parseInt(a);
@@ -127,6 +128,8 @@ public class GUI {
 			e1.printStackTrace();
 		}
 		
+		reSelectButton();
+		lblTab.setText(lblString);
 		fillMovieTable(movieList);
 		//Add action listener for table
 	}
@@ -172,8 +175,37 @@ public class GUI {
 		}
 		
 		CreateGUI();
+		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
 		txtPlotDiscription.setText(movie.getOverview());
 		
+	}
+	
+	public static void reSelectButton()
+	{
+		if(lblString.equals("Top 20 Now Playing Films"))
+		{
+			tglbtnNowPlaying.setSelected(true);
+		}
+		
+		if(lblString.equals("Top 20 Popular Films"))
+		{
+			tglbtnPopular.setSelected(true);
+		}
+		
+		if(lblString.equals("Top 20 Top Rated Films"))
+		{
+			tglbtnTopRated.setSelected(true);
+		}
+		
+		if(lblString.equals("Top 20 Upcoming Films"))
+		{
+			tglbtnUpcoming.setSelected(true);
+		}
+		
+		if(lblString.equals("Top 20 Results From Search"))
+		{
+			tglbtnSearch.setSelected(true);
+		}
 	}
 	
 	public static void setMovieBackdrop(String backdropPath) throws IOException {
@@ -405,9 +437,10 @@ public class GUI {
 				setButtonsFalse();
 				tglbtnNowPlaying.setSelected(true);
 				//TODO: Change this to NowPlaying when we get a new .jar.
-				movieList = api.getPopularMovies(1);
+				movieList = api.getNowPlayingMovies(1);
 				fillMovieTable(movieList);
-				lblTab.setText("Top 20 Now Playing Films");
+				lblString = "Top 20 Now Playing Films";
+				lblTab.setText(lblString);	
 			}
 		});
 		
@@ -417,18 +450,8 @@ public class GUI {
 				tglbtnPopular.setSelected(true);
 				movieList = api.getPopularMovies(1);
 				fillMovieTable(movieList);
-				lblTab.setText("Top 20 Popular Films");
-
-				
-//				try {
-//					displayMovieInfo(101);
-//				} catch (IOException e1) {
-//					//TODO: Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-				
-				
-				
+				lblString = "Top 20 Popular Films";
+				lblTab.setText(lblString);	
 			}
 		});
 		
@@ -437,20 +460,22 @@ public class GUI {
 				setButtonsFalse();
 				tglbtnTopRated.setSelected(true);
 				//TODO: Change this to NowPlaying when we get a new .jar.
-				movieList = api.getPopularMovies(1);
+				movieList = api.getTopRatedMovies(1);
 				fillMovieTable(movieList);
-				lblTab.setText("Top 20 Top Rated Films");
-				
+				lblString = "Top 20 Top Rated Films";
+				lblTab.setText(lblString);	
 			}
 		});
 		
 		tglbtnUpcoming.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Upcoming Films";
 				setButtonsFalse();
 				tglbtnUpcoming.setSelected(true);
 				movieList = api.getUpcomingMovies(1);
 				fillMovieTable(movieList);
-				lblTab.setText("Top 20 Upcoming Films");
+				lblString = "Top 20 Upcoming Films";
+				lblTab.setText(lblString);
 			}
 		});
 		
@@ -459,12 +484,12 @@ public class GUI {
 		tglbtnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				
+				lblString = "Top 20 Results From Search";
 				x = new SearchGUI();
 				if (x.getCloseStatus() == false) {
 					
 				}
-				lblTab.setText("Closed");
-				
+				lblTab.setText(lblString);
 				//lblTab.setText("Top 20 Searched Results");
 			}
 		});
@@ -473,20 +498,20 @@ public class GUI {
 	        public void valueChanged(ListSelectionEvent event) {
 	            // do some actions here, for example
 	            // print first column value from selected row
-	        	String a = tblMovieList.getValueAt(tblMovieList.getSelectedRow(), 4).toString();
-	        	int b = Integer.parseInt(a);
-	        	
+	        	String movieID = tblMovieList.getValueAt(tblMovieList.getSelectedRow(), 4).toString();
 	       
 	        	frame.getContentPane().removeAll();
 				frame.getContentPane().revalidate();
 				frame.getContentPane().repaint();
 				
 				try {
-					displayMovieInfo(b);
+					displayMovieInfo(Integer.parseInt(movieID));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				lblTab.setText(lblString);
+				reSelectButton();
 				fillMovieTable(movieList);
 	        }
 	    });

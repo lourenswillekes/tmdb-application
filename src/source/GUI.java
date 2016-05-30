@@ -33,11 +33,13 @@ import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class GUI {
 
 	private static JFrame frame;
-	private SearchGUI x;
+	static SearchGUI x;
 	private static TmdbApi tmdbApi;
 	
 	static JLabel lblTab;
@@ -58,6 +60,9 @@ public class GUI {
 	static JScrollPane spMovieList;
 	static JLabel lblMovieInfo;
 	static JLabel lblPlotDiscription;
+	static List<MovieDb> popList;
+	static ApiFunctions api;
+	static List<MovieDb> movieList;
 	
 
 	/**
@@ -92,7 +97,7 @@ public class GUI {
 	 */
 	private void initialize() throws IOException {
 		
-		ApiFunctions api = new ApiFunctions();
+		api = new ApiFunctions();
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 943, 545);
@@ -100,96 +105,29 @@ public class GUI {
 		frame.getContentPane().setLayout(null);
 		
 		CreateGUI();
-		displayMovieInfo(100);
 		
-		btnSelectRandom.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				
-			}
-		});
+		tglbtnPopular.setSelected(true);
+		//TODO: Change this to NowPlaying when we get a new .jar.
+		movieList = api.getPopularMovies(1);
+		fillMovieTable(movieList);
+		lblTab.setText("Top 20 Now Playing Films");
 		
-		btnAddFav.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				// TODO: Add selected movie to Favorites. RELEASE 2.
-			}
-		});
+		String a = tblMovieList.getValueAt(0, 4).toString();
+    	int b = Integer.parseInt(a);
+    	
+   
+    	frame.getContentPane().removeAll();
+		frame.getContentPane().revalidate();
+		frame.getContentPane().repaint();
 		
+		try {
+			displayMovieInfo(b);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		btnAddWatch.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				// TODO: Add selected movie to Watchlist. RELEASE 2.
-			}
-		});
-		
-		tglbtnNowPlaying.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				setButtonsFalse();
-				tglbtnNowPlaying.setSelected(true);
-				//TODO: Change this to NowPlaying when we get a new .jar.
-				List<MovieDb> nowList = api.getPopularMovies(1);
-				fillMovieTable(nowList);
-				lblTab.setText("Top 20 Now Playing Films");
-			}
-		});
-		
-		tglbtnPopular.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				setButtonsFalse();
-				tglbtnPopular.setSelected(true);
-				List<MovieDb> popList = api.getPopularMovies(1);
-				fillMovieTable(popList);
-				lblTab.setText("Top 20 Popular Films");
-
-				
-//				try {
-//					displayMovieInfo(101);
-//				} catch (IOException e1) {
-//					//TODO: Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-				
-				
-				
-			}
-		});
-		
-		tglbtnTopRated.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				setButtonsFalse();
-				tglbtnTopRated.setSelected(true);
-				//TODO: Change this to NowPlaying when we get a new .jar.
-				List<MovieDb> topList = api.getPopularMovies(1);
-				fillMovieTable(topList);
-				lblTab.setText("Top 20 Top Rated Films");
-				
-			}
-		});
-		
-		tglbtnUpcoming.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				setButtonsFalse();
-				tglbtnUpcoming.setSelected(true);
-				List<MovieDb> upcList = api.getUpcomingMovies(1);
-				fillMovieTable(upcList);
-				lblTab.setText("Top 20 Upcoming Films");
-			}
-		});
-		
-		
-		
-		tglbtnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				
-				x = new SearchGUI();
-				if (x.getCloseStatus() == false) {
-					
-				}
-				lblTab.setText("Closed");
-				
-				//lblTab.setText("Top 20 Searched Results");
-			}
-		});
-		
+		fillMovieTable(movieList);
 		//Add action listener for table
 	}
 	
@@ -264,7 +202,7 @@ public class GUI {
 			tblMovieList.getModel().setValueAt(mov.get(j).getTitle(), j, 1);
 			tblMovieList.getModel().setValueAt(mov.get(j).getReleaseDate(), j, 2);
 			tblMovieList.getModel().setValueAt(mov.get(j).getVoteAverage(), j, 3);
-			//tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
+			tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
 		}
 	}
 	
@@ -369,41 +307,47 @@ public class GUI {
 		tblMovieList.setFont(new Font("Tahoma", Font.BOLD, 14));
 		tblMovieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tblMovieList.setModel(new DefaultTableModel(
-			new Object[][] {
-				{new Integer(1), null, null, null},
-				{new Integer(2), null, null, null},
-				{new Integer(3), null, null, null},
-				{new Integer(4), null, null, null},
-				{new Integer(5), null, null, null},
-				{new Integer(6), null, null, null},
-				{new Integer(7), null, null, null},
-				{new Integer(8), null, null, null},
-				{new Integer(9), null, null, null},
-				{new Integer(10), null, null, null},
-				{new Integer(11), null, null, null},
-				{new Integer(12), null, null, null},
-				{new Integer(13), null, null, null},
-				{new Integer(14), null, null, null},
-				{new Integer(15), null, null, null},
-				{new Integer(16), null, null, null},
-				{new Integer(17), null, null, null},
-				{new Integer(18), null, null, null},
-				{new Integer(19), null, null, null},
-				{new Integer(20), null, null, null},
-			},
-			new String[] {
-				"", "Title", "Release Date", "Rating"
-			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class
-			};
+				new Object[][] {
+					{new Integer(1), null, null, null, null},
+					{new Integer(2), null, null, null, null},
+					{new Integer(3), null, null, null, null},
+					{new Integer(4), null, null, null, null},
+					{new Integer(5), null, null, null, null},
+					{new Integer(6), null, null, null, null},
+					{new Integer(7), null, null, null, null},
+					{new Integer(8), null, null, null, null},
+					{new Integer(9), null, null, null, null},
+					{new Integer(10), null, null, null, null},
+					{new Integer(11), null, null, null, null},
+					{new Integer(12), null, null, null, null},
+					{new Integer(13), null, null, null, null},
+					{new Integer(14), null, null, null, null},
+					{new Integer(15), null, null, null, null},
+					{new Integer(16), null, null, null, null},
+					{new Integer(17), null, null, null, null},
+					{new Integer(18), null, null, null, null},
+					{new Integer(19), null, null, null, null},
+					{new Integer(20), null, null, null, null},
+				},
+				new String[] {
+					"", "Title", "Release Date", "Rating", ""
+				}
+			) {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				Class[] columnTypes = new Class[] {
+					Integer.class, String.class, String.class, Object.class, Integer.class
+				};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false
+				};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		});
 		tblMovieList.getColumnModel().getColumn(0).setResizable(false);
@@ -412,6 +356,10 @@ public class GUI {
 		tblMovieList.getColumnModel().getColumn(1).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(2).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(3).setResizable(false);
+		tblMovieList.getColumnModel().getColumn(4).setResizable(false);
+		tblMovieList.getColumnModel().getColumn(4).setPreferredWidth(0);
+		tblMovieList.getColumnModel().getColumn(4).setMinWidth(0);
+		tblMovieList.getColumnModel().getColumn(4).setMaxWidth(0);
 		tblMovieList.setRowHeight(30);
 		
 		tblMovieList.setOpaque(false);
@@ -432,6 +380,115 @@ public class GUI {
 		lblPlotDiscription.setFont(new Font("Cooper Black", Font.BOLD, 20));
 		lblPlotDiscription.setBounds(527, 316, 186, 25);
 		frame.getContentPane().add(lblPlotDiscription);
-	}
-	
+		
+		btnSelectRandom.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				
+			}
+		});
+		
+		btnAddFav.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				// TODO: Add selected movie to Favorites. RELEASE 2.
+			}
+		});
+		
+		
+		btnAddWatch.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				// TODO: Add selected movie to Watchlist. RELEASE 2.
+			}
+		});
+		
+		tglbtnNowPlaying.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnNowPlaying.setSelected(true);
+				//TODO: Change this to NowPlaying when we get a new .jar.
+				movieList = api.getPopularMovies(1);
+				fillMovieTable(movieList);
+				lblTab.setText("Top 20 Now Playing Films");
+			}
+		});
+		
+		tglbtnPopular.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnPopular.setSelected(true);
+				movieList = api.getPopularMovies(1);
+				fillMovieTable(movieList);
+				lblTab.setText("Top 20 Popular Films");
+
+				
+//				try {
+//					displayMovieInfo(101);
+//				} catch (IOException e1) {
+//					//TODO: Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+				
+				
+				
+			}
+		});
+		
+		tglbtnTopRated.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnTopRated.setSelected(true);
+				//TODO: Change this to NowPlaying when we get a new .jar.
+				movieList = api.getPopularMovies(1);
+				fillMovieTable(movieList);
+				lblTab.setText("Top 20 Top Rated Films");
+				
+			}
+		});
+		
+		tglbtnUpcoming.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				setButtonsFalse();
+				tglbtnUpcoming.setSelected(true);
+				movieList = api.getUpcomingMovies(1);
+				fillMovieTable(movieList);
+				lblTab.setText("Top 20 Upcoming Films");
+			}
+		});
+		
+		
+		
+		tglbtnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				
+				x = new SearchGUI();
+				if (x.getCloseStatus() == false) {
+					
+				}
+				lblTab.setText("Closed");
+				
+				//lblTab.setText("Top 20 Searched Results");
+			}
+		});
+		
+		tblMovieList.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	            // do some actions here, for example
+	            // print first column value from selected row
+	        	String a = tblMovieList.getValueAt(tblMovieList.getSelectedRow(), 4).toString();
+	        	int b = Integer.parseInt(a);
+	        	
+	       
+	        	frame.getContentPane().removeAll();
+				frame.getContentPane().revalidate();
+				frame.getContentPane().repaint();
+				
+				try {
+					displayMovieInfo(b);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				fillMovieTable(movieList);
+	        }
+	    });
+	}	
 }

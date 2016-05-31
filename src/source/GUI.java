@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.Label;
 import java.awt.Font;
@@ -21,6 +22,7 @@ import java.awt.Image;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
@@ -64,6 +66,7 @@ public class GUI {
 	static ApiFunctions api;
 	static List<MovieDb> movieList;
 	static String lblString;
+	
 	
 
 	/**
@@ -230,11 +233,24 @@ public class GUI {
 	 */
 	public static void fillMovieTable(final List<MovieDb> mov) {
 		int j;
-		for (j = 0; j < 20; j++) {
+		
+		
+		for (j = 0; j < mov.size(); j++) {
+			
 			tblMovieList.getModel().setValueAt(mov.get(j).getTitle(), j, 1);
 			tblMovieList.getModel().setValueAt(mov.get(j).getReleaseDate(), j, 2);
 			tblMovieList.getModel().setValueAt(mov.get(j).getVoteAverage(), j, 3);
 			tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
+		}
+		if(mov.size() != 20)
+		{
+			for (; j < 20; j++) {
+				
+				tblMovieList.getModel().setValueAt("", j, 1);
+				tblMovieList.getModel().setValueAt("", j, 2);
+				tblMovieList.getModel().setValueAt("", j, 3);
+				tblMovieList.getModel().setValueAt("", j, 4);
+			}
 		}
 	}
 	
@@ -416,6 +432,31 @@ public class GUI {
 		btnSelectRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				
+				Random rand = new Random();
+				
+			    int randomNum = rand.nextInt((movieList.size() - 0) + 1);
+			    
+			    String movieID = tblMovieList.getValueAt(randomNum, 4).toString();
+			    
+			    if(!movieID.equals(""))
+	        	{
+		        	frame.getContentPane().removeAll();
+					frame.getContentPane().revalidate();
+					frame.getContentPane().repaint();
+					
+					try {
+						displayMovieInfo(Integer.parseInt(movieID));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					lblTab.setText(lblString);
+					reSelectButton();
+					fillMovieTable(movieList);
+	        	}
+			    
+			    
+				
 			}
 		});
 		
@@ -484,12 +525,13 @@ public class GUI {
 		tglbtnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				
+				setButtonsFalse();
+				String inputValue = JOptionPane.showInputDialog("Search Title");
+				movieList = api.getSearchRes(inputValue, 1);
+				fillMovieTable(movieList);
 				lblString = "Top 20 Results From Search";
-				x = new SearchGUI();
-				if (x.getCloseStatus() == false) {
-					
-				}
 				lblTab.setText(lblString);
+				
 				//lblTab.setText("Top 20 Searched Results");
 			}
 		});
@@ -499,20 +541,22 @@ public class GUI {
 	            // do some actions here, for example
 	            // print first column value from selected row
 	        	String movieID = tblMovieList.getValueAt(tblMovieList.getSelectedRow(), 4).toString();
-	       
-	        	frame.getContentPane().removeAll();
-				frame.getContentPane().revalidate();
-				frame.getContentPane().repaint();
-				
-				try {
-					displayMovieInfo(Integer.parseInt(movieID));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				lblTab.setText(lblString);
-				reSelectButton();
-				fillMovieTable(movieList);
+	        	if(!movieID.equals(""))
+	        	{
+		        	frame.getContentPane().removeAll();
+					frame.getContentPane().revalidate();
+					frame.getContentPane().repaint();
+					
+					try {
+						displayMovieInfo(Integer.parseInt(movieID));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					lblTab.setText(lblString);
+					reSelectButton();
+					fillMovieTable(movieList);
+	        	}
 	        }
 	    });
 	}	

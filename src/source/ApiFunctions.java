@@ -16,7 +16,7 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  * @author Caleb H, Justin N, Lourens W
  *
  */
-public class ApiFunctions {
+public class ApiFunctions implements IApiFunctions {
 	
 	/**
 	 * tmdbAPi object to access the database.

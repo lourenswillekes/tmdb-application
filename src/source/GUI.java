@@ -9,16 +9,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.awt.Image;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
 
+import javax.imageio.ImageIO;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.ImageIcon;
@@ -193,9 +193,11 @@ public class GUI {
 		}
 		
 		createGUI();
+		
 		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
 		txtPlotDiscription.setText(movie.getOverview());
-		
+		txtMovieInfo.setCaretPosition(0);
+		txtPlotDiscription.setCaretPosition(0);
 	}
 	
 	
@@ -280,6 +282,7 @@ public class GUI {
 		tglbtnTopRated.setSelected(false);
 		tglbtnUpcoming.setSelected(false);
 		tglbtnTopRated.setSelected(false);
+		tglbtnSearch.setSelected(false);
 	}
 	
 	/**
@@ -549,14 +552,23 @@ public class GUI {
 		// actionListener for Search
 		tglbtnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				lblString = "Top 20 Results From Search";
-				String inputValue = JOptionPane.showInputDialog("Search Title");
-				movieList = api.getSearchRes(inputValue, 1);
+				String inputValue = " ";
+				inputValue = JOptionPane.showInputDialog("Search Title");
 				
-				setButtonsFalse();
-				tglbtnSearch.setSelected(true);
-				lblTab.setText(lblString);
-				fillMovieTable(movieList);
+				if(inputValue != null){
+					lblString = "Top 20 Results From Search";
+					
+					movieList = api.getSearchRes(inputValue, 1);
+				
+					setButtonsFalse();
+					tglbtnSearch.setSelected(true);
+					lblTab.setText(lblString);
+					fillMovieTable(movieList);
+				}
+				else {
+					setButtonsFalse();
+					reSelectButton();
+				}
 			}
 		});
 		

@@ -16,7 +16,7 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  * @author Caleb H, Justin N, Lourens W
  *
  */
-public class ApiFunctions {
+public class ApiFunctions implements IApiFunctions {
 	
 	/**
 	 * tmdbAPi object to access the database.
@@ -30,8 +30,6 @@ public class ApiFunctions {
 	 * Search database object.
 	 */
 	private TmdbSearch search = tmdbApi.getSearch();
-	
-	
 	
 
 	
@@ -91,11 +89,18 @@ public class ApiFunctions {
 		return searchRes;
 	}
 	
-	public final String getMovieInfo(int movieCode) {
+	
+	/**
+	 * This function returns movie information for the selected Id.
+	 * @param movieId number of the movie requested
+	 * @return String with the information
+	 */
+	public final String getMovieInfo(final int movieId) {
 		String movieInfo = new String("");
 		String temp = new String("");
 		
-		MovieDb movie = movies.getMovie(movieCode, "en" ,MovieMethod.credits, MovieMethod.reviews);
+		MovieDb movie = movies.getMovie(
+				movieId, "en", MovieMethod.credits, MovieMethod.reviews);
 		
 		// retrieve information on movie cast
 		List<PersonCast> cast = movie.getCast();
@@ -104,15 +109,15 @@ public class ApiFunctions {
 		} else {
 			Iterator<PersonCast> iterator = cast.iterator();
 			while (iterator.hasNext()) {
-				PersonCast person = iterator.next();
-				temp = (temp + person.getName() + "\n" + person.getCharacter() + "\n");
+				PersonCast p = iterator.next();
+				temp = (temp + p.getName() + "\n" + p.getCharacter() + "\n");
 			}
 		}		
-		movieInfo = "Title: \n" + movie.getTitle() + "\n\nRun Time:\n" + movie.getRuntime() + 
-				"\n\nRelease Date:\n" + movie.getReleaseDate() +"\n\nCast Info:\n" + temp;
+		movieInfo = "Title: \n" + movie.getTitle() + "\n\nRun Time:\n" 
+				+ movie.getRuntime() + "\n\nRelease Date:\n" 
+				+ movie.getReleaseDate() + "\n\nCast Info:\n" + temp;
 		
 		return movieInfo;
 	}
-	
 	
 }

@@ -1,71 +1,81 @@
 package source;
 
-import java.awt.Color;
-import java.awt.EventQueue;
+import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbMovies;
 
-import javax.swing.JFrame;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.File;
+import java.awt.Image;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
-import java.awt.event.ActionEvent;
-import java.awt.Label;
-import java.awt.Font;
-import java.awt.Image;
+import javax.imageio.ImageIO;
 
-import javax.swing.JTextPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbMovies;
-import info.movito.themoviedbapi.model.MovieDb;
-
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+/**
+ * GUI Class.
+ * @author Caleb H, Justin N, Lourens W
+ * May 2016
+ */
 public class GUI {
 
+	private static ApiFunctions api;
+	
+	private static JButton btnAddFav;
+	private static JButton btnAddWatch;
+	private static JButton btnSelectRandom;
+	
 	private static JFrame frame;
-	static SearchGUI x;
+	
+	private static JLabel lblMovieInfo;
+	private static JLabel lblMoviePoster;
+	private static JLabel lblPlotDiscription;
+	private static JLabel lblTab;
+	
+	private static JScrollPane spMovieInfo;
+	private static JScrollPane spMovieList;
+	private static JScrollPane spPlotDiscription;
+	
+	private static JTable tblMovieList;
+	
+	private static JTextPane txtMovieInfo;
+	private static JTextPane txtPlotDiscription;
+	
+	private static JToggleButton tglbtnNowPlaying;
+	private static JToggleButton tglbtnPopular;
+	private static JToggleButton tglbtnSearch;
+	private static JToggleButton tglbtnTopRated;
+	private static JToggleButton tglbtnUpcoming;
+	
+	private static List<MovieDb> movieList;
+	
+	private static String lblString;
+	
 	private static TmdbApi tmdbApi;
 	
-	static JLabel lblTab;
-	static JButton btnSelectRandom;
-	static JButton btnAddFav;
-	static JTextPane txtPlotDiscription;
-	static JButton btnAddWatch;
-	static JLabel lblMoviePoster;
-	static JScrollPane spPlotDiscription;
-	static JScrollPane spMovieInfo;
-	static JTextPane txtMovieInfo;
-	static JToggleButton tglbtnUpcoming;
-	static JToggleButton tglbtnPopular;
-	static JToggleButton tglbtnTopRated;
-	static JToggleButton tglbtnSearch;
-	static JToggleButton tglbtnNowPlaying;
-	static JTable tblMovieList;
-	static JScrollPane spMovieList;
-	static JLabel lblMovieInfo;
-	static JLabel lblPlotDiscription;
-	static List<MovieDb> popList;
-	static ApiFunctions api;
-	static List<MovieDb> movieList;
-	static String lblString;
+	static SearchGUI x;
 	
 	
 
@@ -108,9 +118,8 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		CreateGUI();
+		createGUI();
 		
-		//TODO: Change this to NowPlaying when we get a new .jar.
 		movieList = api.getPopularMovies(1);
 		fillMovieTable(movieList);
 		lblString = new String("Top 20 Popular Films");
@@ -127,7 +136,6 @@ public class GUI {
 		try {
 			displayMovieInfo(b);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -137,22 +145,29 @@ public class GUI {
 		//Add action listener for table
 	}
 	
-	public static void setMoviePoster(String posterPath) throws IOException {
-		
+	/**
+	 * Function sets the movie poster based on Id of selected movie.
+	 * @param posterPath URL of the movie poster requested
+	 * @throws IOException e
+	 */
+	public static void setMoviePoster(
+			final String posterPath) throws IOException {
 		URL posterURL = new URL(posterPath);
-		
 		BufferedImage poster = ImageIO.read(posterURL);
-	    
-		Image scaledPoster = poster.getScaledInstance(180, 276, Image.SCALE_SMOOTH);
-		
-    	JLabel lblMoviePoster = new JLabel(new ImageIcon(scaledPoster));
+		Image scaled = poster.getScaledInstance(180, 276, Image.SCALE_SMOOTH);
+    	JLabel lblMoviePoster = new JLabel(new ImageIcon(scaled));
 	    
 	   	lblMoviePoster.setBounds(528, 39, 185, 278);
-	    
 	   	frame.getContentPane().add(lblMoviePoster); 	
 	}
 	
-	private static void displayMovieInfo(int movieID) throws IOException {
+	
+	/**
+	 * Function that displays the information for the selected movie.
+	 * @param movieID of the selected movie to be displayed
+	 * @throws IOException e
+	 */
+	private static void displayMovieInfo(final int movieID) throws IOException {
 		
 		TmdbMovies tmdbMovies = tmdbApi.getMovies();
 		
@@ -160,58 +175,60 @@ public class GUI {
 		MovieDb movie = tmdbMovies.getMovie(movieID, "en");
 		
 		// Display movie poster
-		String backdropPath = "https://image.tmdb.org/t/p/original" + movie.getBackdropPath();
+		String backdropPath = "https://image.tmdb.org/t/p/original"
+				+ movie.getBackdropPath();
 		try {
 			setMovieBackdrop(backdropPath);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		// Display movie backdrop
-		String posterPath = "https://image.tmdb.org/t/p/original" + movie.getPosterPath();
+		String posterPath = "https://image.tmdb.org/t/p/original"
+				+ movie.getPosterPath();
 		try {
 			setMoviePoster(posterPath);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		CreateGUI();
+		createGUI();
 		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
 		txtPlotDiscription.setText(movie.getOverview());
 		
 	}
 	
-	public static void reSelectButton()
-	{
-		if(lblString.equals("Top 20 Now Playing Films"))
-		{
+	
+	/**
+	 * Used to re-select the toggle button selected when the GUI is reset
+	 *   for a background change.
+	 */
+	public static void reSelectButton() {
+		if (lblString.equals("Top 20 Now Playing Films")) {
 			tglbtnNowPlaying.setSelected(true);
 		}
-		
-		if(lblString.equals("Top 20 Popular Films"))
-		{
+		if (lblString.equals("Top 20 Popular Films")) {
 			tglbtnPopular.setSelected(true);
 		}
-		
-		if(lblString.equals("Top 20 Top Rated Films"))
-		{
+		if (lblString.equals("Top 20 Top Rated Films")) {
 			tglbtnTopRated.setSelected(true);
 		}
-		
-		if(lblString.equals("Top 20 Upcoming Films"))
-		{
+		if (lblString.equals("Top 20 Upcoming Films")) {
 			tglbtnUpcoming.setSelected(true);
 		}
-		
-		if(lblString.equals("Top 20 Results From Search"))
-		{
+		if (lblString.equals("Top 20 Results From Search")) {
 			tglbtnSearch.setSelected(true);
 		}
 	}
 	
-	public static void setMovieBackdrop(String backdropPath) throws IOException {
+	
+	/**
+	 * Function that sets app background as a movie picture.
+	 * @param backdropPath URL to image
+	 * @throws IOException e
+	 */
+	public static void setMovieBackdrop(
+			final String backdropPath) throws IOException {
 		URL backdropURL = new URL(backdropPath);
 		
 		BufferedImage backdrop = ImageIO.read(backdropURL);
@@ -219,7 +236,8 @@ public class GUI {
 		RescaleOp rescaleOp = new RescaleOp(1.2f, 150, null);
 		rescaleOp.filter(backdrop, backdrop);
 		
-		Image scaledBackdrop = backdrop.getScaledInstance(943, 545, Image.SCALE_SMOOTH);
+		Image scaledBackdrop = backdrop.getScaledInstance(
+				943, 545, Image.SCALE_SMOOTH);
 		
 	    JLabel lblBackdrop = new JLabel(new ImageIcon(scaledBackdrop));
 	    
@@ -242,8 +260,7 @@ public class GUI {
 			tblMovieList.getModel().setValueAt(mov.get(j).getVoteAverage(), j, 3);
 			tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
 		}
-		if(mov.size() != 20)
-		{
+		if (mov.size() != 20) {
 			for (; j < 20; j++) {
 				
 				tblMovieList.getModel().setValueAt("", j, 1);
@@ -265,8 +282,11 @@ public class GUI {
 		tglbtnTopRated.setSelected(false);
 	}
 	
-	
-	public static void CreateGUI() throws IOException {
+	/**
+	 * Method used to create the GUI.
+	 * @throws IOException e
+	 */
+	public static void createGUI() throws IOException {
 		
 		lblTab = new JLabel("");
 		lblTab.setFont(new Font("Cooper Black", Font.PLAIN, 20));
@@ -385,16 +405,17 @@ public class GUI {
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				Class[] columnTypes = new Class[] {
-					Integer.class, String.class, String.class, Object.class, Integer.class
+				private Class[] columnTypes = new Class[] {
+					Integer.class, String.class, String.class, 
+					Object.class, Integer.class
 				};
-			public Class getColumnClass(int columnIndex) {
+			public Class getColumnClass(final int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			boolean[] columnEditables = new boolean[] {
+			private boolean[] columnEditables = new boolean[] {
 					false, false, false, false
 				};
-			public boolean isCellEditable(int row, int column) {
+			public boolean isCellEditable(final int row, final int column) {
 				return columnEditables[column];
 			}
 		});
@@ -411,7 +432,8 @@ public class GUI {
 		tblMovieList.setRowHeight(30);
 		
 		tblMovieList.setOpaque(false);
-		((DefaultTableCellRenderer)tblMovieList.getDefaultRenderer(Object.class)).setOpaque(false);
+		((DefaultTableCellRenderer) tblMovieList.getDefaultRenderer(
+				Object.class)).setOpaque(false);
 		
 		spMovieList.setViewportView(tblMovieList);
 		spMovieList.setOpaque(false);
@@ -423,7 +445,7 @@ public class GUI {
 		lblMovieInfo.setBounds(723, 11, 149, 25);
 		frame.getContentPane().add(lblMovieInfo);
 		
-		lblPlotDiscription = new JLabel("Plot Discription");
+		lblPlotDiscription = new JLabel("Plot Description");
 		lblPlotDiscription.setForeground(Color.BLACK);
 		lblPlotDiscription.setFont(new Font("Cooper Black", Font.BOLD, 20));
 		lblPlotDiscription.setBounds(527, 316, 186, 25);
@@ -434,12 +456,11 @@ public class GUI {
 				
 				Random rand = new Random();
 				
-			    int randomNum = rand.nextInt((movieList.size() - 0) + 1);
+			    int randNum = rand.nextInt((movieList.size() - 0) + 1);
 			    
-			    String movieID = tblMovieList.getValueAt(randomNum, 4).toString();
+			    String movieID = tblMovieList.getValueAt(randNum, 4).toString();
 			    
-			    if(!movieID.equals(""))
-	        	{
+			    if (!movieID.equals("")) {
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
 					frame.getContentPane().repaint();
@@ -447,7 +468,6 @@ public class GUI {
 					try {
 						displayMovieInfo(Integer.parseInt(movieID));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					lblTab.setText(lblString);
@@ -460,89 +480,95 @@ public class GUI {
 			}
 		});
 		
+		//
 		btnAddFav.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// TODO: Add selected movie to Favorites. RELEASE 2.
 			}
 		});
 		
-		
+		//
 		btnAddWatch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// TODO: Add selected movie to Watchlist. RELEASE 2.
 			}
 		});
 		
+		// actionListener for NowPlaying
 		tglbtnNowPlaying.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Now Playing Films";
+				movieList = api.getNowPlayingMovies(1);
+				
 				setButtonsFalse();
 				tglbtnNowPlaying.setSelected(true);
-				//TODO: Change this to NowPlaying when we get a new .jar.
-				movieList = api.getNowPlayingMovies(1);
-				fillMovieTable(movieList);
-				lblString = "Top 20 Now Playing Films";
 				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
 			}
 		});
 		
+		// actionListener for Popular
 		tglbtnPopular.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Popular Films";
+				movieList = api.getPopularMovies(1);
+				
 				setButtonsFalse();
 				tglbtnPopular.setSelected(true);
-				movieList = api.getPopularMovies(1);
-				fillMovieTable(movieList);
-				lblString = "Top 20 Popular Films";
 				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
 			}
 		});
 		
+		// actionListener for TopRated
 		tglbtnTopRated.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Top Rated Films";
+				movieList = api.getTopRatedMovies(1);
+				
 				setButtonsFalse();
 				tglbtnTopRated.setSelected(true);
-				//TODO: Change this to NowPlaying when we get a new .jar.
-				movieList = api.getTopRatedMovies(1);
-				fillMovieTable(movieList);
-				lblString = "Top 20 Top Rated Films";
 				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
 			}
 		});
 		
+		// actionListener for Upcoming
 		tglbtnUpcoming.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				lblString = "Top 20 Upcoming Films";
+				movieList = api.getUpcomingMovies(1);
+				
 				setButtonsFalse();
 				tglbtnUpcoming.setSelected(true);
-				movieList = api.getUpcomingMovies(1);
-				fillMovieTable(movieList);
-				lblString = "Top 20 Upcoming Films";
 				lblTab.setText(lblString);
+				fillMovieTable(movieList);
 			}
 		});
 		
-		
-		
+		// actionListener for Search
 		tglbtnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				
-				setButtonsFalse();
+				lblString = "Top 20 Results From Search";
 				String inputValue = JOptionPane.showInputDialog("Search Title");
 				movieList = api.getSearchRes(inputValue, 1);
-				fillMovieTable(movieList);
-				lblString = "Top 20 Results From Search";
-				lblTab.setText(lblString);
 				
-				//lblTab.setText("Top 20 Searched Results");
+				setButtonsFalse();
+				tglbtnSearch.setSelected(true);
+				lblTab.setText(lblString);
+				fillMovieTable(movieList);
 			}
 		});
 		
-		tblMovieList.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event) {
+		// selectionListener for the MovieTable
+		tblMovieList.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+	        public void valueChanged(final ListSelectionEvent event) {
 	            // do some actions here, for example
 	            // print first column value from selected row
-	        	String movieID = tblMovieList.getValueAt(tblMovieList.getSelectedRow(), 4).toString();
-	        	if(!movieID.equals(""))
-	        	{
+	        	String movieID = tblMovieList.getValueAt(
+	        			tblMovieList.getSelectedRow(), 4).toString();
+	        	if (!movieID.equals("")) {
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
 					frame.getContentPane().repaint();
@@ -550,7 +576,6 @@ public class GUI {
 					try {
 						displayMovieInfo(Integer.parseInt(movieID));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					lblTab.setText(lblString);
@@ -559,5 +584,6 @@ public class GUI {
 	        	}
 	        }
 	    });
+		
 	}	
 }

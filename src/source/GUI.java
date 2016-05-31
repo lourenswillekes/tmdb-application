@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.awt.Image;
@@ -50,7 +49,6 @@ public class GUI {
 	private static JFrame frame;
 	
 	private static JLabel lblMovieInfo;
-	private static JLabel lblMoviePoster;
 	private static JLabel lblPlotDiscription;
 	private static JLabel lblTab;
 	
@@ -75,10 +73,6 @@ public class GUI {
 	
 	private static TmdbApi tmdbApi;
 	
-	static SearchGUI x;
-	
-	
-
 	/**
 	 * Launch the application.
 	 * @param args vars
@@ -142,7 +136,6 @@ public class GUI {
 		reSelectButton();
 		lblTab.setText(lblString);
 		fillMovieTable(movieList);
-		//Add action listener for table
 	}
 	
 	/**
@@ -154,10 +147,10 @@ public class GUI {
 			final String posterPath) throws IOException {
 		URL posterURL = new URL(posterPath);
 		BufferedImage poster = ImageIO.read(posterURL);
-		Image scaled = poster.getScaledInstance(180, 276, Image.SCALE_SMOOTH);
+		Image scaled = poster.getScaledInstance(185, 307, Image.SCALE_SMOOTH);
     	JLabel lblMoviePoster = new JLabel(new ImageIcon(scaled));
 	    
-	   	lblMoviePoster.setBounds(528, 39, 185, 278);
+	   	lblMoviePoster.setBounds(528, 10, 185, 307);
 	   	frame.getContentPane().add(lblMoviePoster); 	
 	}
 	
@@ -175,20 +168,33 @@ public class GUI {
 		MovieDb movie = tmdbMovies.getMovie(movieID, "en");
 		
 		// Display movie poster
-		String backdropPath = "https://image.tmdb.org/t/p/original"
-				+ movie.getBackdropPath();
 		try {
+			String backdropPath = "https://image.tmdb.org/t/p/original"
+					+ movie.getBackdropPath();
+			
+			if(backdropPath.equals("https://image.tmdb.org/t/p/originalnull"))
+			{
+				backdropPath = "http://www.ipages.am/files/companies/1476/template/bg/Blue-movie-film-strip-backgrounds.jpg";
+			}
 			setMovieBackdrop(backdropPath);
 		} catch (Exception e) {
+			
+			System.out.println("No backDrop");
 			e.printStackTrace();
-		}
+		}											
 		
 		// Display movie backdrop
-		String posterPath = "https://image.tmdb.org/t/p/original"
-				+ movie.getPosterPath();
 		try {
+			String posterPath = "https://image.tmdb.org/t/p/original"
+					+ movie.getPosterPath();
+			
+			if(posterPath.equals("https://image.tmdb.org/t/p/originalnull"))
+			{
+				posterPath = "https://cdn.amctheatres.com/Media/Default/Images/noposter.jpg";
+			}
 			setMoviePoster(posterPath);
 		} catch (Exception e) {
+			System.out.println("No Poster");
 			e.printStackTrace();
 		}
 		
@@ -199,7 +205,6 @@ public class GUI {
 		txtMovieInfo.setCaretPosition(0);
 		txtPlotDiscription.setCaretPosition(0);
 	}
-	
 	
 	/**
 	 * Used to re-select the toggle button selected when the GUI is reset
@@ -229,8 +234,7 @@ public class GUI {
 	 * @param backdropPath URL to image
 	 * @throws IOException e
 	 */
-	public static void setMovieBackdrop(
-			final String backdropPath) throws IOException {
+	public static void setMovieBackdrop( final String backdropPath) throws IOException {
 		URL backdropURL = new URL(backdropPath);
 		
 		BufferedImage backdrop = ImageIO.read(backdropURL);
@@ -324,11 +328,13 @@ public class GUI {
 		btnAddWatch.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnAddWatch);
 		
+		/*
 		lblMoviePoster = new JLabel("Movie Poster");
 		lblMoviePoster.setForeground(Color.BLACK);
 		lblMoviePoster.setBounds(529, 11, 168, 25);
 		lblMoviePoster.setFont(new Font("Cooper Black", Font.BOLD, 20));
 		frame.getContentPane().add(lblMoviePoster);
+		*/
 		
 		spMovieInfo = new JScrollPane();
 		spMovieInfo.setBounds(723, 39, 180, 276);
@@ -376,7 +382,6 @@ public class GUI {
 		tblMovieList = new JTable();
 		tblMovieList.setBackground(Color.WHITE);
 		tblMovieList.setFont(new Font("Tahoma", Font.BOLD, 14));
-		tblMovieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tblMovieList.setModel(new DefaultTableModel(
 				new Object[][] {
 					{new Integer(1), null, null, null, null},
@@ -424,19 +429,33 @@ public class GUI {
 		});
 		tblMovieList.getColumnModel().getColumn(0).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(0).setPreferredWidth(23);
-		tblMovieList.getColumnModel().getColumn(0).setMaxWidth(22);
+		tblMovieList.getColumnModel().getColumn(0).setMaxWidth(23);
+		tblMovieList.getColumnModel().getColumn(0).setMinWidth(23);
 		tblMovieList.getColumnModel().getColumn(1).setResizable(false);
+		tblMovieList.getColumnModel().getColumn(1).setPreferredWidth(250);
+		tblMovieList.getColumnModel().getColumn(1).setMinWidth(250);
+		tblMovieList.getColumnModel().getColumn(1).setMaxWidth(600);
 		tblMovieList.getColumnModel().getColumn(2).setResizable(false);
+		tblMovieList.getColumnModel().getColumn(2).setPreferredWidth(100);
+		tblMovieList.getColumnModel().getColumn(2).setMinWidth(100);
+		tblMovieList.getColumnModel().getColumn(2).setMaxWidth(100);
 		tblMovieList.getColumnModel().getColumn(3).setResizable(false);
+		tblMovieList.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tblMovieList.getColumnModel().getColumn(3).setMinWidth(100);
+		tblMovieList.getColumnModel().getColumn(3).setMaxWidth(100);
 		tblMovieList.getColumnModel().getColumn(4).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(4).setPreferredWidth(0);
 		tblMovieList.getColumnModel().getColumn(4).setMinWidth(0);
 		tblMovieList.getColumnModel().getColumn(4).setMaxWidth(0);
 		tblMovieList.setRowHeight(30);
 		
+		tblMovieList.getTableHeader().setReorderingAllowed(false);
+		
 		tblMovieList.setOpaque(false);
 		((DefaultTableCellRenderer) tblMovieList.getDefaultRenderer(
 				Object.class)).setOpaque(false);
+		
+		tblMovieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		spMovieList.setViewportView(tblMovieList);
 		spMovieList.setOpaque(false);
@@ -477,9 +496,6 @@ public class GUI {
 					reSelectButton();
 					fillMovieTable(movieList);
 	        	}
-			    
-			    
-				
 			}
 		});
 		
@@ -594,6 +610,7 @@ public class GUI {
 					reSelectButton();
 					fillMovieTable(movieList);
 	        	}
+	        	//tblMovieList.setRowSelectionInterval(rowNumber, rowNumber);
 	        }
 	    });
 		

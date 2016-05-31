@@ -104,7 +104,7 @@ public class ApiFunctions implements IApiFunctions {
 		
 		// retrieve information on movie cast
 		List<PersonCast> cast = movie.getCast();
-		if (cast == null) {
+		if (0 == cast.size()) {
 			temp = "Cast info not available for this movie";
 		} else {
 			Iterator<PersonCast> iterator = cast.iterator();

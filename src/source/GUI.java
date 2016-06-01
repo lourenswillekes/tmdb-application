@@ -53,7 +53,7 @@ public class GUI {
 	//private static JButton btnAddWatch;
 	
 	/** Select random movie from list button. */
-	private static JButton btnSelectRandom;
+	public static JButton btnSelectRandom;
 	
 	/** Movie info label. */
 	private static JLabel lblMovieInfo;
@@ -83,19 +83,19 @@ public class GUI {
 	private static JTextPane txtPlotOverview;
 	
 	/** Now playing movies in theaters toggle button. */
-	private static JToggleButton tglbtnNowPlaying;
+	public static JToggleButton tglbtnNowPlaying;
 	
 	/** Popular movies toggle button. */
-	private static JToggleButton tglbtnPopular;
+	public static JToggleButton tglbtnPopular;
 	
 	/** Search for movies toggle button. */
-	private static JToggleButton tglbtnSearch;
+	public static JToggleButton tglbtnSearch;
 	
 	/** Top rated movies toggle button. */
-	private static JToggleButton tglbtnTopRated;
+	public static JToggleButton tglbtnTopRated;
 	
 	/** Upcoming movies toggle button. */
-	private static JToggleButton tglbtnUpcoming;
+	public static JToggleButton tglbtnUpcoming;
 	
 	/** Stores list of movies from movie database. */
 	private static List<MovieDb> movieList;
@@ -104,7 +104,8 @@ public class GUI {
 	private static String lblString;
 	
 	/** TMDb API object used for accessing the database. */
-	private static TmdbApi tmdbApi;
+	private static TmdbApi tmdbApi
+		= new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 	
 	/**
 	 * Launch the application.
@@ -114,7 +115,6 @@ public class GUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					tmdbApi = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 					new GUI();
 					GUI.frame.setVisible(true);
 				} catch (Exception e) {
@@ -200,7 +200,7 @@ public class GUI {
 		// Retrieve information on a movie given movie id
 		MovieDb movie = tmdbMovies.getMovie(movieID, "en");
 		
-		// Display movie poster
+		// Display movie backdrop
 		try {
 			String backdropPath = "https://image.tmdb.org/t/p/original"
 					+ movie.getBackdropPath();
@@ -217,7 +217,7 @@ public class GUI {
 			e.printStackTrace();
 		}											
 		
-		// Display movie backdrop
+		// Display movie poster
 		try {
 			String posterPath = "https://image.tmdb.org/t/p/original"
 					+ movie.getPosterPath();

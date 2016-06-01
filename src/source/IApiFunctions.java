@@ -4,14 +4,14 @@ import java.util.List;
 import info.movito.themoviedbapi.model.MovieDb;
 
 /**
- * Interface for the API functions we are using for TMDb Application.
+ * Interface for the API methods we are using for TMDb Application.
  * @author Lourens W
  */
 public interface IApiFunctions {
 	
 	
 	/**
-	 * This function returns a page from the popular movies list.
+	 * This method returns a page from the popular movies list.
 	 * @param page of popular movies list
 	 * @return the list of popular movies from the requested page
 	 */
@@ -19,7 +19,7 @@ public interface IApiFunctions {
 
 
 	/**
-	 * This function returns a page from the upcoming movies list.
+	 * This method returns a page from the upcoming movies list.
 	 * @param page of upcoming movies list
 	 * @return the list of upcoming movies from the requested page
 	 */
@@ -27,7 +27,7 @@ public interface IApiFunctions {
 
 
 	/**
-	 * This function returns a page from the top rated movies list.
+	 * This method returns a page from the top rated movies list.
 	 * @param page of top rated movies list
 	 * @return the list of top rated movies from the requested page
 	 */
@@ -35,7 +35,7 @@ public interface IApiFunctions {
 	
 	
 	/**
-	 * This function returns a page from the now playing movies list.
+	 * This method returns a page from the now playing movies list.
 	 * @param page of now playing movies list
 	 * @return the list of now playing movies from the requested page
 	 */
@@ -43,7 +43,7 @@ public interface IApiFunctions {
 	
 	
 	/**
-	 * This function returns a page from the search results given String srch.
+	 * This method returns a page from the search results given String srch.
 	 * @param srch string to search for movies
 	 * @param page of the search results movies list
 	 * @return the list of movies from the search on the requested page

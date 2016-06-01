@@ -30,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -39,38 +40,70 @@ import javax.swing.table.DefaultTableModel;
  * May 2016
  */
 public class GUI {
-
+	/** Instance of ApiFunctions interface. */
 	private static ApiFunctions api;
 	
-	private static JButton btnAddFav;
-	private static JButton btnAddWatch;
-	private static JButton btnSelectRandom;
-	
+	/** GUI frame. */
 	private static JFrame frame;
 	
+	/** Add to favorites button (Release #2). */
+	//private static JButton btnAddFav;
+	
+	/** Add to watch list button (Release #2). */
+	//private static JButton btnAddWatch;
+	
+	/** Select random movie from list button. */
+	private static JButton btnSelectRandom;
+	
+	/** Movie info label. */
 	private static JLabel lblMovieInfo;
-	private static JLabel lblPlotDiscription;
+	
+	/** Plot overview label. */
+	private static JLabel lblPlotOverview;
+	
+	/** Label for indicating which tab is displayed in the table. */
 	private static JLabel lblTab;
 	
+	/** Movie info scroll pane. */
 	private static JScrollPane spMovieInfo;
-	private static JScrollPane spMovieList;
-	private static JScrollPane spPlotDiscription;
 	
+	/** Movie list scroll pane. */
+	private static JScrollPane spMovieList;
+	
+	/** Plot overview scroll pane. */
+	private static JScrollPane spPlotOverview;
+	
+	/** Movie list table. */
 	private static JTable tblMovieList;
 	
+	/** Movie info text pane. */
 	private static JTextPane txtMovieInfo;
-	private static JTextPane txtPlotDiscription;
 	
+	/** Plot overview text pane. */
+	private static JTextPane txtPlotOverview;
+	
+	/** Now playing movies in theaters toggle button. */
 	private static JToggleButton tglbtnNowPlaying;
+	
+	/** Popular movies toggle button. */
 	private static JToggleButton tglbtnPopular;
+	
+	/** Search for movies toggle button. */
 	private static JToggleButton tglbtnSearch;
+	
+	/** Top rated movies toggle button. */
 	private static JToggleButton tglbtnTopRated;
+	
+	/** Upcoming movies toggle button. */
 	private static JToggleButton tglbtnUpcoming;
 	
+	/** Stores list of movies from movie database. */
 	private static List<MovieDb> movieList;
 	
+	/** Label for displaying string. */
 	private static String lblString;
 	
+	/** TMDb API object used for accessing the database. */
 	private static TmdbApi tmdbApi;
 	
 	/**
@@ -114,9 +147,9 @@ public class GUI {
 		
 		createGUI();
 		
-		movieList = api.getPopularMovies(1);
+		movieList = api.getNowPlayingMovies(1);
 		fillMovieTable(movieList);
-		lblString = new String("Top 20 Popular Films");
+		lblString = new String("Top 20 Now Playing Films");
 		lblTab.setText(lblString);
 		
 		String a = tblMovieList.getValueAt(0, 4).toString();
@@ -139,7 +172,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Function sets the movie poster based on Id of selected movie.
+	 * Sets the movie poster based on the selected movie.
 	 * @param posterPath URL of the movie poster requested
 	 * @throws IOException e
 	 */
@@ -156,7 +189,7 @@ public class GUI {
 	
 	
 	/**
-	 * Function that displays the information for the selected movie.
+	 * Displays the information for the selected movie.
 	 * @param movieID of the selected movie to be displayed
 	 * @throws IOException e
 	 */
@@ -172,9 +205,10 @@ public class GUI {
 			String backdropPath = "https://image.tmdb.org/t/p/original"
 					+ movie.getBackdropPath();
 			
-			if(backdropPath.equals("https://image.tmdb.org/t/p/originalnull"))
-			{
-				backdropPath = "http://www.ipages.am/files/companies/1476/template/bg/Blue-movie-film-strip-backgrounds.jpg";
+			if (backdropPath.equals("https://image.tmdb.org/t/p/"
+					+ "originalnull")) {
+				backdropPath = "http://www.ipages.am/files/companies/1476/"
+						+ "template/bg/Blue-movie-film-strip-backgrounds.jpg";
 			}
 			setMovieBackdrop(backdropPath);
 		} catch (Exception e) {
@@ -188,9 +222,9 @@ public class GUI {
 			String posterPath = "https://image.tmdb.org/t/p/original"
 					+ movie.getPosterPath();
 			
-			if(posterPath.equals("https://image.tmdb.org/t/p/originalnull"))
-			{
-				posterPath = "https://cdn.amctheatres.com/Media/Default/Images/noposter.jpg";
+			if (posterPath.equals("https://image.tmdb.org/t/p/originalnull")) {
+				posterPath = "https://cdn.amctheatres.com/Media/Default/"
+						+ "Images/noposter.jpg";
 			}
 			setMoviePoster(posterPath);
 		} catch (Exception e) {
@@ -198,12 +232,13 @@ public class GUI {
 			e.printStackTrace();
 		}
 		
+		// Re-create GUI
 		createGUI();
 		
 		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
-		txtPlotDiscription.setText(movie.getOverview());
+		txtPlotOverview.setText(movie.getOverview());
 		txtMovieInfo.setCaretPosition(0);
-		txtPlotDiscription.setCaretPosition(0);
+		txtPlotOverview.setCaretPosition(0);
 	}
 	
 	/**
@@ -230,11 +265,12 @@ public class GUI {
 	
 	
 	/**
-	 * Function that sets app background as a movie picture.
+	 * Sets the background as the movie backdrop.
 	 * @param backdropPath URL to image
 	 * @throws IOException e
 	 */
-	public static void setMovieBackdrop( final String backdropPath) throws IOException {
+	public static void setMovieBackdrop(final String backdropPath)
+			throws IOException {
 		URL backdropURL = new URL(backdropPath);
 		
 		BufferedImage backdrop = ImageIO.read(backdropURL);
@@ -252,19 +288,22 @@ public class GUI {
 	
 	
 	/**
-	 * fillMovieTable fills the table with the requested movies.
+	 * Fills the table with the requested movies.
 	 * @param mov is the list returned from the API
 	 */
 	public static void fillMovieTable(final List<MovieDb> mov) {
 		int j;
 		
-		
 		for (j = 0; j < mov.size(); j++) {
 			
-			tblMovieList.getModel().setValueAt(mov.get(j).getTitle(), j, 1);
-			tblMovieList.getModel().setValueAt(mov.get(j).getReleaseDate(), j, 2);
-			tblMovieList.getModel().setValueAt(mov.get(j).getVoteAverage(), j, 3);
-			tblMovieList.getModel().setValueAt(mov.get(j).getId(), j, 4);
+			tblMovieList.getModel().setValueAt(mov.get(j).
+												getTitle(), j, 1);
+			tblMovieList.getModel().setValueAt(mov.get(j).
+												getReleaseDate(), j, 2);
+			tblMovieList.getModel().setValueAt(mov.get(j).
+												getVoteAverage(), j, 3);
+			tblMovieList.getModel().setValueAt(mov.get(j).
+												getId(), j, 4);
 		}
 		if (mov.size() != 20) {
 			for (; j < 20; j++) {
@@ -278,7 +317,7 @@ public class GUI {
 	}
 	
 	/**
-	 * setButtonsFalse sets the state of all buttons to unselected.
+	 * Sets the state of all buttons to unselected.
 	 */
 	public static void setButtonsFalse() {
 		tglbtnNowPlaying.setSelected(false);
@@ -290,7 +329,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Method used to create the GUI.
+	 * Used to create the GUI.
 	 * @throws IOException e
 	 */
 	public static void createGUI() throws IOException {
@@ -299,47 +338,77 @@ public class GUI {
 		lblTab.setFont(new Font("Cooper Black", Font.PLAIN, 20));
 		lblTab.setBounds(10, 60, 356, 29);
 		frame.getContentPane().add(lblTab);
-	
+		
+		// Now Playing Button
+		tglbtnNowPlaying = new JToggleButton("Now Playing");
+		tglbtnNowPlaying.setBounds(0, 0, 100, 32);
+		tglbtnNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnNowPlaying);
+		
+		// Upcoming Button
+		tglbtnUpcoming = new JToggleButton("Upcoming");
+		tglbtnUpcoming.setBounds(99, 0, 100, 32);
+		tglbtnUpcoming.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnUpcoming);
+		
+		// Top Rated Button
+		tglbtnTopRated = new JToggleButton("Top Rated");
+		tglbtnTopRated.setBounds(196, 0, 100, 32);
+		tglbtnTopRated.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnTopRated);
+		
+		// Popular Button
+		tglbtnPopular = new JToggleButton("Popular");
+		tglbtnPopular.setBounds(295, 0, 100, 32);
+		tglbtnPopular.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnPopular);
+		
+		// Search Button
+		tglbtnSearch = new JToggleButton("Search");
+		tglbtnSearch.setBounds(393, 0, 100, 32);
+		tglbtnSearch.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnSearch);
+		
+		
+		// Select Random Button
 		btnSelectRandom = new JButton("Select Random");
 		btnSelectRandom.setBounds(353, 453, 164, 32);
 		btnSelectRandom.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnSelectRandom);
 		
+		// Add to Favorites Button (Release #2)
+		/*
 		btnAddFav = new JButton("Add To Favorites");
 		btnAddFav.setBounds(527, 453, 170, 32);
 		btnAddFav.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnAddFav);
+		*/
 		
-		spPlotDiscription = new JScrollPane();
-		spPlotDiscription.setBounds(527, 344, 374, 98);
-		frame.getContentPane().add(spPlotDiscription);
-		
-		txtPlotDiscription = new JTextPane();
-		txtPlotDiscription.setBackground(new Color(65, 105, 225));
-		txtPlotDiscription.setFont(new Font("Tahoma", Font.BOLD, 14));
-		txtPlotDiscription.setOpaque(false);
-		txtPlotDiscription.setForeground(Color.BLACK);
-		spPlotDiscription.setViewportView(txtPlotDiscription);
-		spPlotDiscription.setOpaque(false);
-		spPlotDiscription.getViewport().setOpaque(false);
-		
+		// Add to Watchlist Button (Release #2)
+		/*
 		btnAddWatch = new JButton("Add To Watchlist");
 		btnAddWatch.setBounds(733, 453, 170, 32);
 		btnAddWatch.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnAddWatch);
+		*/ 
 		
-		/*
-		lblMoviePoster = new JLabel("Movie Poster");
-		lblMoviePoster.setForeground(Color.BLACK);
-		lblMoviePoster.setBounds(529, 11, 168, 25);
-		lblMoviePoster.setFont(new Font("Cooper Black", Font.BOLD, 20));
-		frame.getContentPane().add(lblMoviePoster);
-		*/
+		// Plot Overview Scroll/Text Pane
+		spPlotOverview = new JScrollPane();
+		spPlotOverview.setBounds(527, 344, 374, 98);
+		frame.getContentPane().add(spPlotOverview);
+		txtPlotOverview = new JTextPane();
+		txtPlotOverview.setBackground(new Color(65, 105, 225));
+		txtPlotOverview.setFont(new Font("Tahoma", Font.BOLD, 14));
+		txtPlotOverview.setOpaque(false);
+		txtPlotOverview.setForeground(Color.BLACK);
+		spPlotOverview.setViewportView(txtPlotOverview);
+		spPlotOverview.setOpaque(false);
+		spPlotOverview.getViewport().setOpaque(false);
 		
+		// Movie Info Scroll/Text Pane
 		spMovieInfo = new JScrollPane();
 		spMovieInfo.setBounds(723, 39, 180, 276);
 		frame.getContentPane().add(spMovieInfo);
-		
 		txtMovieInfo = new JTextPane();
 		txtMovieInfo.setBackground(new Color(65, 105, 225));
 		txtMovieInfo.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -348,37 +417,11 @@ public class GUI {
 		spMovieInfo.setViewportView(txtMovieInfo);
 		spMovieInfo.setOpaque(false);
 		spMovieInfo.getViewport().setOpaque(false);
-		
-		tglbtnUpcoming = new JToggleButton("Upcoming");
-		tglbtnUpcoming.setBounds(196, 0, 100, 32);
-		tglbtnUpcoming.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnUpcoming);
-		
-		tglbtnPopular = new JToggleButton("Popular");
-		tglbtnPopular.setBounds(0, 0, 100, 32);
-		tglbtnPopular.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnPopular);
-		
-		tglbtnTopRated = new JToggleButton("Top Rated");
-		tglbtnTopRated.setBounds(99, 0, 100, 32);
-		tglbtnTopRated.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnTopRated);
-		
-		tglbtnSearch = new JToggleButton("Search");
-		tglbtnSearch.setBounds(393, 0, 100, 32);
-		tglbtnSearch.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnSearch);
-		
-		tglbtnNowPlaying = new JToggleButton("Now Playing");
-		tglbtnNowPlaying.setBounds(295, 0, 100, 32);
-		tglbtnNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnNowPlaying);
-		
-		
 		spMovieList = new JScrollPane();
 		spMovieList.setBounds(10, 100, 501, 328);
 		frame.getContentPane().add(spMovieList);
 		
+		// Movie List Table
 		tblMovieList = new JTable();
 		tblMovieList.setBackground(Color.WHITE);
 		tblMovieList.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -417,62 +460,180 @@ public class GUI {
 					Integer.class, String.class, String.class, 
 					Object.class, Integer.class
 				};
-			public Class getColumnClass(final int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			private boolean[] columnEditables = new boolean[] {
-					false, false, false, false
+				public Class getColumnClass(final int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+				private boolean[] columnEditables = new boolean[] {
+						false, false, false, false
 				};
-			public boolean isCellEditable(final int row, final int column) {
-				return columnEditables[column];
+				public boolean isCellEditable(final int row, final int column) {
+					return columnEditables[column];
+				}
 			}
-		});
+		);
+		
+		// Movie List Table Properties
+		DefaultTableCellRenderer renderCenter = new DefaultTableCellRenderer();
+		renderCenter.setHorizontalAlignment(SwingConstants.CENTER);
+		renderCenter.setOpaque(false);
+		
+		DefaultTableCellRenderer renderLeft = new DefaultTableCellRenderer();
+		renderLeft.setHorizontalAlignment(SwingConstants.LEFT);
+		renderLeft.setOpaque(false);
+		
 		tblMovieList.getColumnModel().getColumn(0).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(0).setPreferredWidth(23);
 		tblMovieList.getColumnModel().getColumn(0).setMaxWidth(23);
 		tblMovieList.getColumnModel().getColumn(0).setMinWidth(23);
+		tblMovieList.getColumnModel().getColumn(0).setCellRenderer(
+															renderCenter);
 		tblMovieList.getColumnModel().getColumn(1).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(1).setPreferredWidth(250);
 		tblMovieList.getColumnModel().getColumn(1).setMinWidth(250);
 		tblMovieList.getColumnModel().getColumn(1).setMaxWidth(600);
+		tblMovieList.getColumnModel().getColumn(1).setCellRenderer(renderLeft);
 		tblMovieList.getColumnModel().getColumn(2).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(2).setPreferredWidth(100);
 		tblMovieList.getColumnModel().getColumn(2).setMinWidth(100);
 		tblMovieList.getColumnModel().getColumn(2).setMaxWidth(100);
+		tblMovieList.getColumnModel().getColumn(2).setCellRenderer(
+															renderCenter);
 		tblMovieList.getColumnModel().getColumn(3).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(3).setPreferredWidth(100);
-		tblMovieList.getColumnModel().getColumn(3).setMinWidth(100);
-		tblMovieList.getColumnModel().getColumn(3).setMaxWidth(100);
+		tblMovieList.getColumnModel().getColumn(3).setMinWidth(75);
+		tblMovieList.getColumnModel().getColumn(3).setMaxWidth(75);
+		tblMovieList.getColumnModel().getColumn(3).setCellRenderer(
+															renderCenter);
 		tblMovieList.getColumnModel().getColumn(4).setResizable(false);
 		tblMovieList.getColumnModel().getColumn(4).setPreferredWidth(0);
 		tblMovieList.getColumnModel().getColumn(4).setMinWidth(0);
 		tblMovieList.getColumnModel().getColumn(4).setMaxWidth(0);
 		tblMovieList.setRowHeight(30);
-		
 		tblMovieList.getTableHeader().setReorderingAllowed(false);
-		
 		tblMovieList.setOpaque(false);
+		tblMovieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		((DefaultTableCellRenderer) tblMovieList.getDefaultRenderer(
 				Object.class)).setOpaque(false);
 		
-		tblMovieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+		// Movie List Scroll Pane
 		spMovieList.setViewportView(tblMovieList);
 		spMovieList.setOpaque(false);
 		spMovieList.getViewport().setOpaque(false);
 		
+		// Movie Info Label
 		lblMovieInfo = new JLabel("Movie Info");
 		lblMovieInfo.setForeground(Color.BLACK);
 		lblMovieInfo.setFont(new Font("Cooper Black", Font.BOLD, 20));
 		lblMovieInfo.setBounds(723, 11, 149, 25);
 		frame.getContentPane().add(lblMovieInfo);
 		
-		lblPlotDiscription = new JLabel("Plot Description");
-		lblPlotDiscription.setForeground(Color.BLACK);
-		lblPlotDiscription.setFont(new Font("Cooper Black", Font.BOLD, 20));
-		lblPlotDiscription.setBounds(527, 316, 186, 25);
-		frame.getContentPane().add(lblPlotDiscription);
+		// Plot Overview Label
+		lblPlotOverview = new JLabel("Plot Overview");
+		lblPlotOverview.setForeground(Color.BLACK);
+		lblPlotOverview.setFont(new Font("Cooper Black", Font.BOLD, 20));
+		lblPlotOverview.setBounds(527, 316, 186, 25);
+		frame.getContentPane().add(lblPlotOverview);
 		
+		// Now Playing Button Listener
+		tglbtnNowPlaying.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Now Playing Films";
+				movieList = api.getNowPlayingMovies(1);
+				
+				setButtonsFalse();
+				tglbtnNowPlaying.setSelected(true);
+				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
+			}
+		});
+		
+		// Upcoming Button Listener
+		tglbtnUpcoming.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Upcoming Films";
+				movieList = api.getUpcomingMovies(1);
+				
+				setButtonsFalse();
+				tglbtnUpcoming.setSelected(true);
+				lblTab.setText(lblString);
+				fillMovieTable(movieList);
+			}
+		});
+				
+		// Top Rated Button Listener
+		tglbtnTopRated.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Top Rated Films";
+				movieList = api.getTopRatedMovies(1);
+				
+				setButtonsFalse();
+				tglbtnTopRated.setSelected(true);
+				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
+			}
+		});
+		
+		// Popular Button Listener
+		tglbtnPopular.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				lblString = "Top 20 Popular Films";
+				movieList = api.getPopularMovies(1);
+				
+				setButtonsFalse();
+				tglbtnPopular.setSelected(true);
+				lblTab.setText(lblString);	
+				fillMovieTable(movieList);
+			}
+		});
+		
+		// Search Button Listener
+		tglbtnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				String inputValue = JOptionPane.showInputDialog("Search Title");
+				
+				if (inputValue != null && !inputValue.equals("")) {
+					lblString = "Top 20 Results From Search";
+					
+					movieList = api.getSearchRes(inputValue, 1);
+				
+					setButtonsFalse();
+					tglbtnSearch.setSelected(true);
+					lblTab.setText(lblString);
+					fillMovieTable(movieList);
+				} else {
+					setButtonsFalse();
+					reSelectButton();
+				}
+			}
+		});
+		
+		// Movie Table Selection Listener
+		tblMovieList.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+	        public void valueChanged(final ListSelectionEvent event) {
+	            // do some actions here, for example
+	            // print first column value from selected row
+	        	String movieID = tblMovieList.getValueAt(
+	        			tblMovieList.getSelectedRow(), 4).toString();
+	        	
+	        	if (!movieID.equals("")) {
+		        	frame.getContentPane().removeAll();
+					frame.getContentPane().revalidate();
+					frame.getContentPane().repaint();
+					
+					try {
+						displayMovieInfo(Integer.parseInt(movieID));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					lblTab.setText(lblString);
+					reSelectButton();
+					fillMovieTable(movieList);
+	        	}
+	        }
+	    });
+		
+		// Select Random Button Listener
 		btnSelectRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				
@@ -499,120 +660,22 @@ public class GUI {
 			}
 		});
 		
-		//
+		// Add to Favorites Button Listener (Release #2)
+		/*
 		btnAddFav.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// TODO: Add selected movie to Favorites. RELEASE 2.
 			}
 		});
+		*/
 		
-		//
+		// Add to Watchlist Button Listener (Release #2)
+		/*
 		btnAddWatch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// TODO: Add selected movie to Watchlist. RELEASE 2.
 			}
 		});
-		
-		// actionListener for NowPlaying
-		tglbtnNowPlaying.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				lblString = "Top 20 Now Playing Films";
-				movieList = api.getNowPlayingMovies(1);
-				
-				setButtonsFalse();
-				tglbtnNowPlaying.setSelected(true);
-				lblTab.setText(lblString);	
-				fillMovieTable(movieList);
-			}
-		});
-		
-		// actionListener for Popular
-		tglbtnPopular.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				lblString = "Top 20 Popular Films";
-				movieList = api.getPopularMovies(1);
-				
-				setButtonsFalse();
-				tglbtnPopular.setSelected(true);
-				lblTab.setText(lblString);	
-				fillMovieTable(movieList);
-			}
-		});
-		
-		// actionListener for TopRated
-		tglbtnTopRated.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				lblString = "Top 20 Top Rated Films";
-				movieList = api.getTopRatedMovies(1);
-				
-				setButtonsFalse();
-				tglbtnTopRated.setSelected(true);
-				lblTab.setText(lblString);	
-				fillMovieTable(movieList);
-			}
-		});
-		
-		// actionListener for Upcoming
-		tglbtnUpcoming.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				lblString = "Top 20 Upcoming Films";
-				movieList = api.getUpcomingMovies(1);
-				
-				setButtonsFalse();
-				tglbtnUpcoming.setSelected(true);
-				lblTab.setText(lblString);
-				fillMovieTable(movieList);
-			}
-		});
-		
-		// actionListener for Search
-		tglbtnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				String inputValue = " ";
-				inputValue = JOptionPane.showInputDialog("Search Title");
-				
-				if(inputValue != null){
-					lblString = "Top 20 Results From Search";
-					
-					movieList = api.getSearchRes(inputValue, 1);
-				
-					setButtonsFalse();
-					tglbtnSearch.setSelected(true);
-					lblTab.setText(lblString);
-					fillMovieTable(movieList);
-				}
-				else {
-					setButtonsFalse();
-					reSelectButton();
-				}
-			}
-		});
-		
-		// selectionListener for the MovieTable
-		tblMovieList.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-	        public void valueChanged(final ListSelectionEvent event) {
-	            // do some actions here, for example
-	            // print first column value from selected row
-	        	String movieID = tblMovieList.getValueAt(
-	        			tblMovieList.getSelectedRow(), 4).toString();
-	        	if (!movieID.equals("")) {
-		        	frame.getContentPane().removeAll();
-					frame.getContentPane().revalidate();
-					frame.getContentPane().repaint();
-					
-					try {
-						displayMovieInfo(Integer.parseInt(movieID));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					lblTab.setText(lblString);
-					reSelectButton();
-					fillMovieTable(movieList);
-	        	}
-	        	//tblMovieList.setRowSelectionInterval(rowNumber, rowNumber);
-	        }
-	    });
-		
+		*/
 	}	
 }

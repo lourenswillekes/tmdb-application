@@ -18,23 +18,17 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  */
 public class ApiFunctions implements IApiFunctions {
 	
-	/**
-	 * tmdbAPi object to access the database.
-	 */
+	/** tmdbApi object to access the database. */
 	private TmdbApi tmdbApi = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
-	/**
-	 * Movie database object.
-	 */
+	
+	/** Movie database object. */
 	private TmdbMovies movies = tmdbApi.getMovies();
-	/**
-	 * Search database object.
-	 */
+	
+	/** Search database object. */
 	private TmdbSearch search = tmdbApi.getSearch();
 	
-
-	
 	/**
-	 * This function returns a page from the popular movies list.
+	 * This method returns a page from the popular movies list.
 	 * @param page of popular movies list
 	 * @return the list of popular movies from the requested page
 	 */
@@ -45,7 +39,7 @@ public class ApiFunctions implements IApiFunctions {
 
 
 	/**
-	 * This function returns a page from the upcoming movies list.
+	 * This method returns a page from the upcoming movies list.
 	 * @param page of upcoming movies list
 	 * @return the list of upcoming movies from the requested page
 	 */
@@ -56,7 +50,7 @@ public class ApiFunctions implements IApiFunctions {
 
 
 	/**
-	 * This function returns a page from the top rated movies list.
+	 * This method returns a page from the top rated movies list.
 	 * @param page of top rated movies list
 	 * @return the list of top rated movies from the requested page
 	 */
@@ -67,7 +61,7 @@ public class ApiFunctions implements IApiFunctions {
 	
 	
 	/**
-	 * This function returns a page from the now playing movies list.
+	 * This method returns a page from the now playing movies list.
 	 * @param page of now playing movies list
 	 * @return the list of now playing movies from the requested page
 	 */
@@ -78,7 +72,7 @@ public class ApiFunctions implements IApiFunctions {
 	
 	
 	/**
-	 * This function returns a page from the search results given String srch.
+	 * This method returns a page from the search results given String srch.
 	 * @param srch string to search for movies
 	 * @param page of the search results movies list
 	 * @return the list of movies from the search on the requested page
@@ -91,7 +85,7 @@ public class ApiFunctions implements IApiFunctions {
 	
 	
 	/**
-	 * This function returns movie information for the selected Id.
+	 * This method returns movie information for the selected Id.
 	 * @param movieId number of the movie requested
 	 * @return String with the information
 	 */
@@ -119,5 +113,4 @@ public class ApiFunctions implements IApiFunctions {
 		
 		return movieInfo;
 	}
-	
 }

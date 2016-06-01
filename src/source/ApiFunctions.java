@@ -7,6 +7,7 @@ import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbSearch;
 import info.movito.themoviedbapi.TmdbMovies.MovieMethod;
+import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.people.PersonCast;
 
@@ -91,7 +92,8 @@ public class ApiFunctions implements IApiFunctions {
 	 */
 	public final String getMovieInfo(final int movieId) {
 		String movieInfo = new String("");
-		String temp = new String("");
+		String castStr = new String("");
+		String genreStr = new String("");
 		
 		MovieDb movie = movies.getMovie(
 				movieId, "en", MovieMethod.credits, MovieMethod.reviews);
@@ -99,17 +101,34 @@ public class ApiFunctions implements IApiFunctions {
 		// retrieve information on movie cast
 		List<PersonCast> cast = movie.getCast();
 		if (0 == cast.size()) {
-			temp = "Cast info not available for this movie";
+			castStr = "Cast info not available for this movie";
 		} else {
 			Iterator<PersonCast> iterator = cast.iterator();
 			while (iterator.hasNext()) {
 				PersonCast p = iterator.next();
-				temp = (temp + p.getName() + "\n" + p.getCharacter() + "\n");
+				castStr = (castStr + p.getName() + "\nas "
+								   + p.getCharacter() + "\n");
 			}
-		}		
-		movieInfo = "Title: \n" + movie.getTitle() + "\n\nRun Time:\n" 
-				+ movie.getRuntime() + "\n\nRelease Date:\n" 
-				+ movie.getReleaseDate() + "\n\nCast Info:\n" + temp;
+		}
+		
+		// retrieve information on movie cast
+		List<Genre> genre = movie.getGenres();
+		if (0 == genre.size()) {
+			genreStr = "Genre info not available for this movie";
+		} else {
+			Iterator<Genre> iterator = genre.iterator();
+			while (iterator.hasNext()) {
+				Genre g = iterator.next();
+				genreStr = (genreStr + g.getName() + "\n");
+			}
+		}
+		
+		movieInfo = "Title: \n" + movie.getTitle()
+				+ "\n\nRelease Date:\n" + movie.getReleaseDate()
+				+ "\n\nRating:\n" + movie.getVoteAverage()
+				+ "\n\nGenre:\n" + genreStr
+				+ "\nRun Time:\n" + movie.getRuntime()
+				+ "\n\nCast:\n" + castStr;
 		
 		return movieInfo;
 	}

@@ -53,7 +53,7 @@ public class GUI {
 	//private static JButton btnAddWatch;
 	
 	/** Select random movie from list button. */
-	public static JButton btnSelectRandom;
+	private static JButton btnSelectRandom;
 	
 	/** Movie info label. */
 	private static JLabel lblMovieInfo;
@@ -83,19 +83,19 @@ public class GUI {
 	private static JTextPane txtPlotOverview;
 	
 	/** Now playing movies in theaters toggle button. */
-	public static JToggleButton tglbtnNowPlaying;
+	private static JToggleButton tglbtnNowPlaying;
 	
 	/** Popular movies toggle button. */
-	public static JToggleButton tglbtnPopular;
+	private static JToggleButton tglbtnPopular;
 	
 	/** Search for movies toggle button. */
-	public static JToggleButton tglbtnSearch;
+	private static JToggleButton tglbtnSearch;
 	
 	/** Top rated movies toggle button. */
-	public static JToggleButton tglbtnTopRated;
+	private static JToggleButton tglbtnTopRated;
 	
 	/** Upcoming movies toggle button. */
-	public static JToggleButton tglbtnUpcoming;
+	private static JToggleButton tglbtnUpcoming;
 	
 	/** Stores list of movies from movie database. */
 	private static List<MovieDb> movieList;
@@ -401,6 +401,7 @@ public class GUI {
 		txtPlotOverview.setFont(new Font("Tahoma", Font.BOLD, 14));
 		txtPlotOverview.setOpaque(false);
 		txtPlotOverview.setForeground(Color.BLACK);
+		txtPlotOverview.setEditable(false);
 		spPlotOverview.setViewportView(txtPlotOverview);
 		spPlotOverview.setOpaque(false);
 		spPlotOverview.getViewport().setOpaque(false);
@@ -414,6 +415,7 @@ public class GUI {
 		txtMovieInfo.setFont(new Font("Tahoma", Font.BOLD, 14));
 		txtMovieInfo.setOpaque(false);
 		txtMovieInfo.setForeground(Color.BLACK);
+		txtMovieInfo.setEditable(false);
 		spMovieInfo.setViewportView(txtMovieInfo);
 		spMovieInfo.setOpaque(false);
 		spMovieInfo.getViewport().setOpaque(false);

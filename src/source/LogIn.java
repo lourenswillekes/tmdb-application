@@ -1,12 +1,17 @@
 package source;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -50,8 +55,14 @@ public class LogIn extends JDialog {
 			JButton button = new JButton("Register");
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					
-					
+					String url = "https://www.themoviedb.org/account/signup";
+					Desktop desktop = Desktop.getDesktop();
+					try {
+						desktop.browse(new URI(url));
+					} catch (IOException | URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					//Function for registering 
 					
 					

@@ -1,14 +1,22 @@
 package source;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import info.movito.themoviedbapi.TmdbAccount;
 import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbAuthentication;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbSearch;
 import info.movito.themoviedbapi.TmdbMovies.MovieMethod;
 import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.config.Account;
+import info.movito.themoviedbapi.model.config.TokenAuthorisation;
+import info.movito.themoviedbapi.model.config.TokenSession;
+import info.movito.themoviedbapi.model.core.AccountID;
+import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.people.PersonCast;
 
 /**
@@ -18,6 +26,11 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  *
  */
 public class ApiFunctions implements IApiFunctions {
+	
+	String Password;
+	String UserName;
+	List<MovieDb> movieList;
+	SessionToken sessionToken;
 	
 	/** tmdbApi object to access the database. */
 	private TmdbApi tmdbApi = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
@@ -132,4 +145,112 @@ public class ApiFunctions implements IApiFunctions {
 		
 		return movieInfo;
 	}
+
+	public String getPassword() {
+		return Password;
+	}
+
+
+	public void setPassword(String password) {
+		Password = password;
+	}
+
+
+	public String getUserName() {
+		return UserName;
+	}
+
+
+	public void setUserName(String userName) {
+		UserName = userName;
+	}
+
+
+	public List<MovieDb> getMovieList() {
+		return movieList;
+	}
+
+
+	public void setMovieList(List<MovieDb> movieList) {
+		this.movieList = movieList;
+	}
+
+
+	public SessionToken getSessionToken() {
+		
+		// There are two ways to generate session id
+		// Generating session id using only API calls (requires username and password)
+		TmdbAuthentication tmdbAuth = tmdbApi.getAuthentication();
+		TokenAuthorisation tokenAuth = tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(), this.UserName, this.Password);
+		TokenSession tokenSession = tmdbAuth.getSessionToken(tokenAuth);
+		String sessionId = tokenSession.getSessionId();
+		SessionToken sessionToken = new SessionToken(sessionId);
+		
+		// Generating session id via the website (user interaction involved)
+		// Step 1: create a new request token
+		//		http://api.themoviedb.org/3/authentication/token/new?api_key=your-api-key
+		//		(note down the request_token from the response)
+		// Step 2: ask the user for permission
+		//		https://www.themoviedb.org/authenticate/request_token
+		// Step 3: create a session id
+		//		http://api.themoviedb.org/3/authentication/session/new?api_key=api-key&request_token=request-token
+		//		(use session-id value in the response to set the value for sessionId variable in the code below
+		//String sessionId = "session-id";
+		//SessionToken sessionToken = new SessionToken(sessionId);		
+		return sessionToken;
+	}
+	
+	public void setSessionToken(SessionToken sessionToken) {
+		this.sessionToken = sessionToken;
+	}
+
+
+	public final List<MovieDb> getFavorites(final int page) {
+		List<MovieDb> upc;
+		if(this.sessionToken != null)
+		{
+			TmdbAccount tmdbAccount = tmdbApi.getAccount();
+			Account act = tmdbAccount.getAccount(this.sessionToken);
+			AccountID actId = new AccountID(act.getId());
+			
+			upc = tmdbAccount.getFavoriteMovies(this.sessionToken, actId).getResults();
+		}
+		else
+		{
+			upc =  new ArrayList<MovieDb>();
+		}
+		return upc;
+	}
+	
+	public final List<MovieDb> getWatchList(final int page) {
+		
+		List<MovieDb> upc;
+		if(this.sessionToken != null)
+		{
+			TmdbAccount tmdbAccount = tmdbApi.getAccount();
+			Account act = tmdbAccount.getAccount(this.sessionToken);
+			AccountID actId = new AccountID(act.getId());
+			
+			upc = tmdbAccount.getWatchListMovies(this.sessionToken, actId, page).getResults();
+		}
+		else
+		{
+			upc =  new ArrayList<MovieDb>();
+		}
+		return upc;
+	}
+	
+	public final String getaccountName() {
+		
+		if(this.sessionToken != null)
+		{
+			TmdbAccount tmdbAccount = tmdbApi.getAccount();
+			Account act = tmdbAccount.getAccount(this.sessionToken);
+			String ret = new String("Hello " +act.getUserName());
+			return ret;
+		}
+		else
+			return "";
+	}
+	
 }

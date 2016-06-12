@@ -11,14 +11,14 @@ public interface ISession {
 
 	
 	/**
-	 * This method returns the users favorites.
+	 * This method returns the user's favorites.
 	 * @return movies on the favorites list
 	 */
 	List<MovieDb> getFavorites();
 	
 	
 	/**
-	 * This method returns the users watchlist.
+	 * This method returns the user's watchlist.
 	 * @return moves on the watchlist list
 	 */
 	List<MovieDb> getWatchList();
@@ -26,18 +26,16 @@ public interface ISession {
 	
 	/**
 	 * This method returns the requested movie from the favorites.
-	 * @param idx the index of the selected movie
-	 * @return the movie that was requested
+	 * @param id the index of the selected movie
 	 */
-	void addFavoritesMovie(int idx);
+	void addFavoritesMovie(int id);
 
 	
 	/**
 	 * This method returns the requested movie from the watchlist.
-	 * @param idx the index of the selected movie
-	 * @return the movie that was requested
+	 * @param id the index of the selected movie
 	 */
-	void addWatchListMovie(int idx);
+	void addWatchListMovie(int id);
 	
 	
 	/**

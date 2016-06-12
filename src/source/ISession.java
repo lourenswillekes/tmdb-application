@@ -29,7 +29,7 @@ public interface ISession {
 	 * @param idx the index of the selected movie
 	 * @return the movie that was requested
 	 */
-	MovieDb getFavoritesMovie(int idx);
+	void addFavoritesMovie(int idx);
 
 	
 	/**
@@ -37,7 +37,7 @@ public interface ISession {
 	 * @param idx the index of the selected movie
 	 * @return the movie that was requested
 	 */
-	MovieDb getWatchListMovie(int idx);
+	void addWatchListMovie(int idx);
 	
 	
 	/**

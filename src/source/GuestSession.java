@@ -1,5 +1,6 @@
 package source;
 
+import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
 
 import java.util.ArrayList;
@@ -12,15 +13,13 @@ import java.util.List;
  */
 public class GuestSession implements ISession {
 
-	/**
-	 * Private list of movies for guest favorites.
-	 */
+	/** Private list of movies for guest favorites. */
 	private List<MovieDb> guestFavorites;
 	
-	/**
-	 * Private list of movies for guest watchlist.
-	 */
+	/** Private list of movies for guest watchlist. */
 	private List<MovieDb> guestWatchList;
+	
+	private TmdbMovies movies;
 	
 	
 	/**
@@ -53,8 +52,8 @@ public class GuestSession implements ISession {
 	 * @param idx the index of the selected movie
 	 * @return the movie that was requested
 	 */
-	public final MovieDb getFavoritesMovie(final int idx) {
-		return guestFavorites.get(idx);
+	public final void addFavoritesMovie(final int id) {
+		guestFavorites.add(movies.getMovie(id, "en"));
 	}
 	
 	/**
@@ -62,8 +61,8 @@ public class GuestSession implements ISession {
 	 * @param idx the index of the selected movie
 	 * @return the movie that was requested
 	 */
-	public final MovieDb getWatchListMovie(final int idx) {
-		return guestWatchList.get(idx);
+	public final void addWatchListMovie(final int id) {
+		guestWatchList.add(movies.getMovie(id, "en"));
 	}
 	
 	/**

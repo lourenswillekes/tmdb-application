@@ -27,6 +27,9 @@ public class AccountSession implements ISession {
 	/** Private account Id for the account logged in. */
 	private AccountID aid;
 	
+	/** Declares MovieDb for selected movie. */
+	private MovieDb selected;
+	
 	
 	/**
 	 * Public constructor for AccountSession.
@@ -50,6 +53,7 @@ public class AccountSession implements ISession {
 	 * This method returns the user's favorites.
 	 * @return movies on the favorites list
 	 */
+	@Override
 	public final List<MovieDb> getFavorites() {
 		List<MovieDb> fav = acc.getFavoriteMovies(tkn, aid).getResults();
 		return fav;
@@ -59,6 +63,7 @@ public class AccountSession implements ISession {
 	 * This method returns the user's watchlist.
 	 * @return movies on the watchlist list
 	 */
+	@Override
 	public final List<MovieDb> getWatchList() {
 		List<MovieDb> wat = acc.getWatchListMovies(tkn, aid, 1).getResults();
 		return wat;
@@ -66,26 +71,27 @@ public class AccountSession implements ISession {
 
 	/**
 	 * This method returns the requested movie from the favorites.
-	 * @param id the index of the selected movie
+	 * @param mov the movie to remove from the list
 	 */
-	public final void addFavoritesMovie(final int id) {
-		acc.addFavorite(tkn, aid, id, MediaType.MOVIE);
+	@Override
+	public final void addFavoritesMovie(final MovieDb mov) {
+		acc.addFavorite(tkn, aid, mov.getId(), MediaType.MOVIE);
 	}
 
 	/**
 	 * This method returns the requested movie from the watchlist.
-	 * @param id the index of the selected movie
+	 * @param mov the movie to remove from the list
 	 */
-	
-	public final void addWatchListMovie(final int id) {
-		acc.addToWatchList(tkn, aid, id, MediaType.MOVIE);
+	@Override
+	public final void addWatchListMovie(final MovieDb mov) {
+		acc.addToWatchList(tkn, aid, mov.getId(), MediaType.MOVIE);
 	}
 
 	/**
 	 * This method removes the requested movie from the favorites.
 	 * @param mov the movie to remove from the list
 	 */
-	
+	@Override
 	public final void rmFavoritesMovie(final MovieDb mov) {
 		acc.removeFavorite(tkn, aid, mov.getId(), MediaType.MOVIE);
 	}
@@ -94,9 +100,49 @@ public class AccountSession implements ISession {
 	 * This method removes the requested movie from the watchlist.
 	 * @param mov the movie to remove from the list
 	 */
-	
+	@Override
 	public final void rmWatchListMovie(final MovieDb mov) {
 		acc.removeFromWatchList(tkn, aid, mov.getId(), MediaType.MOVIE);
+	}
+
+	/**
+	 * This method gets the selected movie.
+	 * @return the selected movie
+	 */
+	@Override
+	public final MovieDb getSelectedMovie() {
+		return selected;
+	}
+
+	/**
+	 * This method sets the selected movie.
+	 * @param mov the movie to set as selected
+	 */
+	@Override
+	public final void setSelectedMovie(final MovieDb mov) {
+		selected = mov;
+	}
+
+	/**
+	 * This method returns true if the selected movie is in the favorites list.
+	 * @param mov to check for in the list
+	 * @return true if found, else false
+	 */
+	@Override
+	public final boolean isSelectedFavorites(final MovieDb mov) {
+		List<MovieDb> fav = this.getFavorites();
+		return fav.contains(mov);
+	}
+
+	/**
+	 * This method returns true if the selected movie is in the watchlist list.
+	 * @param mov to check for in the list
+	 * @return true if found, else false
+	 */
+	@Override
+	public final boolean isSelectedWatchList(final MovieDb mov) {
+		List<MovieDb> wat = this.getWatchList();
+		return wat.contains(mov);
 	}
 
 }

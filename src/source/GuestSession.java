@@ -1,7 +1,5 @@
 package source;
 
-import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
 
 import java.util.ArrayList;
@@ -21,20 +19,15 @@ public class GuestSession implements ISession {
 	private List<MovieDb> guestWatchList;
 
 	/** Private object to access the db movies. */
-	private TmdbMovies movies;
+	private MovieDb selected;
 	
 	
 	/**
 	 * Public constructor for GuestSession.
 	 */
 	public GuestSession() {
-		
-		final TmdbApi api = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
-		
 		guestFavorites = new ArrayList<MovieDb>();
 		guestWatchList = new ArrayList<MovieDb>();
-		movies = api.getMovies();
-		
 	}
 	
 	
@@ -42,6 +35,7 @@ public class GuestSession implements ISession {
 	 * This method returns the user's favorites.
 	 * @return movies on the favorites list
 	 */
+	@Override
 	public final List<MovieDb> getFavorites() {
 		return guestFavorites;
 	}
@@ -50,30 +44,34 @@ public class GuestSession implements ISession {
 	 * This method returns the user's watchlist.
 	 * @return moves on the watchlist list
 	 */
+	@Override
 	public final List<MovieDb> getWatchList() {
 		return guestWatchList;
 	}
 	
 	/**
-	 * This method returns the requested movie from the favorites.
-	 * @param id the index of the selected movie
+	 * This method adds the selected movie to the favorites.
+	 * @param mov the movie to remove from the list
 	 */
-	public final void addFavoritesMovie(final int id) {
-		guestFavorites.add(movies.getMovie(id, "en"));
+	@Override
+	public final void addFavoritesMovie(final MovieDb mov) {
+		guestFavorites.add(mov);
 	}
 	
 	/**
 	 * This method returns the requested movie from the watchlist.
-	 * @param id the index of the selected movie
+	 * @param mov the movie to remove from the list
 	 */
-	public final void addWatchListMovie(final int id) {
-		guestWatchList.add(movies.getMovie(id, "en"));
+	@Override
+	public final void addWatchListMovie(final MovieDb mov) {
+		guestWatchList.add(mov);
 	}
 	
 	/**
 	 * This method removes the requested movie from the favorites.
 	 * @param mov the movie to remove from the list
 	 */
+	@Override
 	public final void rmFavoritesMovie(final MovieDb mov) {
 		guestFavorites.remove(mov);
 	}
@@ -82,8 +80,49 @@ public class GuestSession implements ISession {
 	 * This method removes the requested movie from the watchlist.
 	 * @param mov the movie to remove from the list
 	 */
+	@Override
 	public final void rmWatchListMovie(final MovieDb mov) {
 		guestWatchList.remove(mov);
+	}
+
+	/**
+	 * This method gets the selected movie.
+	 * @return the selected movie
+	 */
+	@Override
+	public final MovieDb getSelectedMovie() {
+		return selected;
+	}
+
+	/**
+	 * This method sets the selected movie.
+	 * @param mov the movie to set as selected
+	 */
+	@Override
+	public final void setSelectedMovie(final MovieDb mov) {
+		selected = mov;
+	}
+
+
+	/**
+	 * This method returns true if the selected movie is in the favorites list.
+	 * @param mov to check for in the list
+	 * @return true if found, else false
+	 */
+	@Override
+	public final boolean isSelectedFavorites(final MovieDb mov) {
+		return guestFavorites.contains(mov);
+	}
+
+
+	/**
+	 * This method returns true if the selected movie is in the watchlist list.
+	 * @param mov to check for in the list
+	 * @return true if found, else false
+	 */
+	@Override
+	public final boolean isSelectedWatchList(final MovieDb mov) {
+		return guestWatchList.contains(mov);
 	}
 	
 }

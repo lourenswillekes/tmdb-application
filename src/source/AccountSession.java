@@ -71,38 +71,34 @@ public class AccountSession implements ISession {
 
 	/**
 	 * This method returns the requested movie from the favorites.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void addFavoritesMovie(final MovieDb mov) {
-		acc.addFavorite(tkn, aid, mov.getId(), MediaType.MOVIE);
+	public final void addFavoritesMovie() {
+		acc.addFavorite(tkn, aid, selected.getId(), MediaType.MOVIE);
 	}
 
 	/**
 	 * This method returns the requested movie from the watchlist.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void addWatchListMovie(final MovieDb mov) {
-		acc.addToWatchList(tkn, aid, mov.getId(), MediaType.MOVIE);
+	public final void addWatchListMovie() {
+		acc.addToWatchList(tkn, aid, selected.getId(), MediaType.MOVIE);
 	}
 
 	/**
 	 * This method removes the requested movie from the favorites.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void rmFavoritesMovie(final MovieDb mov) {
-		acc.removeFavorite(tkn, aid, mov.getId(), MediaType.MOVIE);
+	public final void rmFavoritesMovie() {
+		acc.removeFavorite(tkn, aid, selected.getId(), MediaType.MOVIE);
 	}
 
 	/**
 	 * This method removes the requested movie from the watchlist.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void rmWatchListMovie(final MovieDb mov) {
-		acc.removeFromWatchList(tkn, aid, mov.getId(), MediaType.MOVIE);
+	public final void rmWatchListMovie() {
+		acc.removeFromWatchList(tkn, aid, selected.getId(), MediaType.MOVIE);
 	}
 
 	/**
@@ -125,24 +121,22 @@ public class AccountSession implements ISession {
 
 	/**
 	 * This method returns true if the selected movie is in the favorites list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
 	@Override
-	public final boolean isSelectedFavorites(final MovieDb mov) {
+	public final boolean isSelectedFavorites() {
 		List<MovieDb> fav = this.getFavorites();
-		return fav.contains(mov);
+		return fav.contains(selected);
 	}
 
 	/**
 	 * This method returns true if the selected movie is in the watchlist list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
 	@Override
-	public final boolean isSelectedWatchList(final MovieDb mov) {
+	public final boolean isSelectedWatchList() {
 		List<MovieDb> wat = this.getWatchList();
-		return wat.contains(mov);
+		return wat.contains(selected);
 	}
 
 }

@@ -42,7 +42,7 @@ public class GuestSession implements ISession {
 
 	/**
 	 * This method returns the user's watchlist.
-	 * @return moves on the watchlist list
+	 * @return movies on the watchlist list
 	 */
 	@Override
 	public final List<MovieDb> getWatchList() {
@@ -51,38 +51,34 @@ public class GuestSession implements ISession {
 	
 	/**
 	 * This method adds the selected movie to the favorites.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void addFavoritesMovie(final MovieDb mov) {
-		guestFavorites.add(mov);
+	public final void addFavoritesMovie() {
+		guestFavorites.add(selected);
 	}
 	
 	/**
-	 * This method returns the requested movie from the watchlist.
-	 * @param mov the movie to remove from the list
+	 * This method adds the selected movie to the watchlist.
 	 */
 	@Override
-	public final void addWatchListMovie(final MovieDb mov) {
-		guestWatchList.add(mov);
+	public final void addWatchListMovie() {
+		guestWatchList.add(selected);
 	}
 	
 	/**
 	 * This method removes the requested movie from the favorites.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void rmFavoritesMovie(final MovieDb mov) {
-		guestFavorites.remove(mov);
+	public final void rmFavoritesMovie() {
+		guestFavorites.remove(selected);
 	}
 	
 	/**
 	 * This method removes the requested movie from the watchlist.
-	 * @param mov the movie to remove from the list
 	 */
 	@Override
-	public final void rmWatchListMovie(final MovieDb mov) {
-		guestWatchList.remove(mov);
+	public final void rmWatchListMovie() {
+		guestWatchList.remove(selected);
 	}
 
 	/**
@@ -106,23 +102,21 @@ public class GuestSession implements ISession {
 
 	/**
 	 * This method returns true if the selected movie is in the favorites list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
 	@Override
-	public final boolean isSelectedFavorites(final MovieDb mov) {
-		return guestFavorites.contains(mov);
+	public final boolean isSelectedFavorites() {
+		return guestFavorites.contains(selected);
 	}
 
 
 	/**
 	 * This method returns true if the selected movie is in the watchlist list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
 	@Override
-	public final boolean isSelectedWatchList(final MovieDb mov) {
-		return guestWatchList.contains(mov);
+	public final boolean isSelectedWatchList() {
+		return guestWatchList.contains(selected);
 	}
 	
 }

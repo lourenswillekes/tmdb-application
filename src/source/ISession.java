@@ -26,30 +26,26 @@ public interface ISession {
 	
 	/**
 	 * This method adds the selected movie to the favorites.
-	 * @param mov the movie to add to the list
 	 */
-	void addFavoritesMovie(MovieDb mov);
+	void addFavoritesMovie();
 
 	
 	/**
 	 * This method adds the selected movie to the watchlist.
-	 * @param mov the movie to add to the list
 	 */
-	void addWatchListMovie(MovieDb mov);
+	void addWatchListMovie();
 	
 	
 	/**
-	 * This method removes the requested movie from the favorites.
-	 * @param mov the movie to remove from the list
+	 * This method removes the selected movie from the favorites.
 	 */
-	void rmFavoritesMovie(MovieDb mov);
+	void rmFavoritesMovie();
 	
 	
 	/**
-	 * This method removes the requested movie from the watchlist.
-	 * @param mov the movie to remove from the list
+	 * This method removes the selected movie from the watchlist.
 	 */
-	void rmWatchListMovie(MovieDb mov);
+	void rmWatchListMovie();
 	
 	
 	/**
@@ -68,17 +64,15 @@ public interface ISession {
 	
 	/**
 	 * This method returns true if the selected movie is in the favorites list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
-	boolean isSelectedFavorites(MovieDb mov);
+	boolean isSelectedFavorites();
 	
 	
 	/**
 	 * This method returns true if the selected movie is in the watchlist list.
-	 * @param mov to check for in the list
 	 * @return true if found, else false
 	 */
-	boolean isSelectedWatchList(MovieDb mov);
+	boolean isSelectedWatchList();
 	
 }

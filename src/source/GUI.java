@@ -43,14 +43,21 @@ public class GUI {
 	/** Instance of ApiFunctions interface. */
 	private static ApiFunctions api;
 	
+	
+	/** Declares the session. */
+	private static ISession session;
+	
+	
+	
+	
 	/** GUI frame. */
 	private static JFrame frame;
 	
 	/** Add to favorites button (Release #2). */
-	private static JButton btnAddFav;
+	private static JButton btnAddRmFav;
 	
 	/** Add to watch list button (Release #2). */
-	private static JButton btnAddWatch;
+	private static JButton btnAddRmWatch;
 	
 	/** Select random movie from list button. */
 	public static JButton btnSelectRandom;
@@ -114,10 +121,10 @@ public class GUI {
 	static LogIn logIn;
 	
 	/** Favorites movies toggle button. */
-	public static JToggleButton tglbtnAddFav;
+	public static JToggleButton tglbtnFavorites;
 	
 	/** Watchlist movies toggle button. */
-	public static JToggleButton tglbtnAddWatch;
+	public static JToggleButton tglbtnWatchList;
 	
 	/**
 	 * Launch the application.
@@ -152,6 +159,8 @@ public class GUI {
 		
 		api = new ApiFunctions();
 		
+		session = new GuestSession();
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 950, 575);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -166,6 +175,8 @@ public class GUI {
 		
 		String a = tblMovieList.getValueAt(0, 4).toString();
     	int b = Integer.parseInt(a);
+    	
+    	session.setSelectedMovie(tmdbApi.getMovies().getMovie(b, "en"));
     	
    
     	frame.getContentPane().removeAll();
@@ -344,8 +355,8 @@ public class GUI {
 		tglbtnUpcoming.setSelected(false);
 		tglbtnTopRated.setSelected(false);
 		tglbtnSearch.setSelected(false);
-		tglbtnAddFav.setSelected(false);
-		tglbtnAddWatch.setSelected(false);
+		tglbtnFavorites.setSelected(false);
+		tglbtnWatchList.setSelected(false);
 	}
 	
 	/**
@@ -401,27 +412,27 @@ public class GUI {
 		btnSelectRandom.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnSelectRandom);
 		
-		// Add to Favorites Button (Release #2)
-		btnAddFav = new JButton("Add To Favorites");
-		btnAddFav.setBounds(527, 493, 170, 32);
-		btnAddFav.setFont(new Font("Modern No. 20", Font.BOLD, 14));
-		frame.getContentPane().add(btnAddFav);
+		// Add/Rm Favorites Button (Release #2)
+		btnAddRmFav = new JButton("Add To Favorites");
+		btnAddRmFav.setBounds(527, 493, 170, 32);
+		btnAddRmFav.setFont(new Font("Modern No. 20", Font.BOLD, 14));
+		frame.getContentPane().add(btnAddRmFav);
 		
-		// Add to Watchlist Button (Release #2)
-		btnAddWatch = new JButton("Add To Watchlist");
-		btnAddWatch.setBounds(733, 493, 170, 32);
-		btnAddWatch.setFont(new Font("Modern No. 20", Font.BOLD, 14));
-		frame.getContentPane().add(btnAddWatch); 
+		// Add/Rm Watchlist Button (Release #2)
+		btnAddRmWatch = new JButton("Add To Watchlist");
+		btnAddRmWatch.setBounds(733, 493, 170, 32);
+		btnAddRmWatch.setFont(new Font("Modern No. 20", Font.BOLD, 14));
+		frame.getContentPane().add(btnAddRmWatch); 
 		
-		tglbtnAddFav = new JToggleButton("Favorites");
-		tglbtnAddFav.setBounds(585, 0, 117, 32);
-		tglbtnAddFav.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnAddFav);
+		tglbtnFavorites = new JToggleButton("Favorites");
+		tglbtnFavorites.setBounds(585, 0, 117, 32);
+		tglbtnFavorites.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnFavorites);
 		
-		tglbtnAddWatch = new JToggleButton("Watchlist");
-		tglbtnAddWatch.setBounds(702, 0, 117, 32);
-		tglbtnAddWatch.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(tglbtnAddWatch);
+		tglbtnWatchList = new JToggleButton("Watchlist");
+		tglbtnWatchList.setBounds(702, 0, 117, 32);
+		tglbtnWatchList.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(tglbtnWatchList);
 		
 		
 		// Login Button
@@ -660,27 +671,27 @@ public class GUI {
 			}
 		});
 		
-		// Popular Button Listener
-		tglbtnAddFav.addActionListener(new ActionListener() {
+		// Favorites Button Listener
+		tglbtnFavorites.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				lblString = "Top 20 Favorite Movies";
-				api.setMovieList(api.getFavorites(1));
+				api.setMovieList(session.getFavorites());
 				
 				setButtonsFalse();
-				tglbtnAddFav.setSelected(true);
+				tglbtnFavorites.setSelected(true);
 				lblTab.setText(lblString);	
 				fillMovieTable(api.getMovieList());
 			}
 		});
 				
-		// Popular Button Listener
-		tglbtnAddWatch.addActionListener(new ActionListener() {
+		// WatchList Button Listener
+		tglbtnWatchList.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				lblString = "Top 20 WatchList Movies";
-				api.setMovieList(api.getWatchList(1));
+				api.setMovieList(session.getWatchList());
 				
 				setButtonsFalse();
-				tglbtnAddWatch.setSelected(true);
+				tglbtnWatchList.setSelected(true);
 				lblTab.setText(lblString);	
 				fillMovieTable(api.getMovieList());
 			}
@@ -696,6 +707,9 @@ public class GUI {
 	        			tblMovieList.getSelectedRow(), 4).toString();
 	        	
 	        	if (!movieID.equals("")) {
+	        		
+	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
+	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
 					frame.getContentPane().repaint();
@@ -740,18 +754,39 @@ public class GUI {
 		});
 		
 		// Add to Favorites Button Listener (Release #2)
-		
-		btnAddFav.addActionListener(new ActionListener() {
+		btnAddRmFav.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				// TODO: Add selected movie to Favorites. RELEASE 2.
+				if (session.isSelectedFavorites()) {
+					session.rmFavoritesMovie();
+					btnAddRmFav.setText("Add To Favorites");
+				} else {
+					session.addFavoritesMovie();
+					btnAddRmFav.setText("Rm From Favorites");
+				}
+				
+				if (lblString.equals("Top 20 Favorite Movies")) {
+					api.setMovieList(session.getFavorites());
+					fillMovieTable(api.getMovieList());
+				}
 			}
 		});
 		
 		
 		// Add to Watchlist Button Listener (Release #2)
-		btnAddWatch.addActionListener(new ActionListener() {
+		btnAddRmWatch.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				// TODO: Add selected movie to Watchlist. RELEASE 2.
+				if (session.isSelectedWatchList()) {
+					session.rmWatchListMovie();
+					btnAddRmWatch.setText("Add To WatchList");
+				} else {
+					session.addWatchListMovie();
+					btnAddRmWatch.setText("Rm From WatchList");
+				}
+				
+				if (lblString.equals("Top 20 WatchList Movies")) {
+					api.setMovieList(session.getWatchList());
+					fillMovieTable(api.getMovieList());
+				}
 			}
 		});
 		

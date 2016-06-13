@@ -360,6 +360,22 @@ public class GUI {
 	}
 	
 	/**
+	 * Sets the text on the add/rm buttons based on selected movie.
+	 */
+	public static void setAddRmBtnTxt(){
+		if (session.isSelectedFavorites()) {
+			btnAddRmFav.setText("Rm From Favorites");
+		} else {
+			btnAddRmFav.setText("Add To Favorites");
+		}
+		if (session.isSelectedWatchList()) {
+			btnAddRmWatch.setText("Rm From WatchList");
+		} else {
+			btnAddRmWatch.setText("Add To WatchList");
+		}
+	}
+	
+	/**
 	 * Used to create the GUI.
 	 * @throws IOException e
 	 */
@@ -643,10 +659,20 @@ public class GUI {
 			}
 		});
 		
+		
+		// Login Button Listener
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				logIn = new LogIn(api);
-				lblUserName.setText(api.UserName);
+				//logIn = new LogIn(api);
+				
+				final MovieDb temp = session.getSelectedMovie();
+				
+				session = new AccountSession("parkourlour", "passNEWword");
+				session.setSelectedMovie(temp);
+				setAddRmBtnTxt();
+				
+				lblUserName.setText("sup dude");
+				
 			}
 		});
 		
@@ -709,6 +735,7 @@ public class GUI {
 	        	if (!movieID.equals("")) {
 	        		
 	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
+	        		setAddRmBtnTxt();
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
@@ -737,6 +764,10 @@ public class GUI {
 			    String movieID = tblMovieList.getValueAt(randNum, 4).toString();
 			    
 			    if (!movieID.equals("")) {
+
+	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
+	        		setAddRmBtnTxt();
+	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
 					frame.getContentPane().repaint();

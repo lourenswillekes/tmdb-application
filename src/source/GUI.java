@@ -161,8 +161,9 @@ public class GUI {
 		
 		session = new GuestSession();
 		
-		frame = new JFrame();
+		frame = new JFrame("Super Cool App");
 		frame.setBounds(100, 100, 950, 575);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		

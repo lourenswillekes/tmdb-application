@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+//import javafx.scene.control.PasswordField;
+//import javafx.scene.control.TextField;
 
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -46,7 +46,7 @@ public class LogIn extends JDialog {
 	 * Create the dialog.
 	 */
 	public LogIn(ApiFunctions a) {
-		setBounds(100, 100, 347, 137);
+		setBounds(100, 100, 390, 200);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -68,7 +68,8 @@ public class LogIn extends JDialog {
 					
 				}
 			});
-			button.setBounds(10, 12, 88, 23);
+			//button.setBounds(10, 12, 88, 23);
+			button.setBounds(100, 109, 90, 23);
 			contentPanel.add(button);
 		}
 		{
@@ -87,28 +88,28 @@ public class LogIn extends JDialog {
 					//Function for Signing in
 				}
 			});
-			button.setBounds(108, 12, 89, 23);
+			button.setBounds(200, 109, 90, 23);
 			contentPanel.add(button);
 		}
 		{
 			passwordField = new JPasswordField();
-			passwordField.setBounds(207, 61, 105, 20);
+			passwordField.setBounds(100, 80, 190, 20);
 			contentPanel.add(passwordField);
 		}
 		{
 			UserNameField = new JTextField();
-			UserNameField.setBounds(207, 26, 107, 20);
+			UserNameField.setBounds(100, 45, 190, 20);
 			UserNameField.setColumns(10);
 			contentPanel.add(UserNameField);
 		}
 		{
 			JLabel label = new JLabel("Username");
-			label.setBounds(207, 11, 80, 14);
+			label.setBounds(100, 30, 80, 14);
 			contentPanel.add(label);
 		}
 		{
 			JLabel label = new JLabel("Password");
-			label.setBounds(207, 46, 80, 14);
+			label.setBounds(100, 65, 80, 14);
 			contentPanel.add(label);
 		}
 		
@@ -116,6 +117,7 @@ public class LogIn extends JDialog {
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
+		setResizable(false);
 	}
 
 }

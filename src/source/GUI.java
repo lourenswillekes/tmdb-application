@@ -280,6 +280,7 @@ public class GUI {
 		// Re-create GUI
 		createGUI();
 		
+		setAddRmBtnTxt();
 		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
 		txtPlotOverview.setText(movie.getOverview());
 		txtMovieInfo.setCaretPosition(0);
@@ -307,13 +308,12 @@ public class GUI {
 			tglbtnSearch.setSelected(true);
 		}
 		if (lblString.equals("Top 20 Favorite Movies")) {
-			tglbtnSearch.setSelected(true);
+			tglbtnFavorites.setSelected(true);
 		}
 		if (lblString.equals("Top 20 WatchList Movies")) {
-			tglbtnSearch.setSelected(true);
+			tglbtnWatchList.setSelected(true);
 		}
 	}
-	
 	
 	/**
 	 * Sets the background as the movie backdrop.
@@ -739,6 +739,14 @@ public class GUI {
 				
 				lblUserName.setText("sup dude");
 				
+				if (lblString.equals("Top 20 Favorite Movies")) {
+					api.setMovieList(session.getFavorites());
+					fillMovieTable(api.getMovieList());
+				}
+				else if (lblString.equals("Top 20 WatchList Movies")) {
+					api.setMovieList(session.getWatchList());
+					fillMovieTable(api.getMovieList());
+				} 
 			}
 		});
 		
@@ -801,7 +809,6 @@ public class GUI {
 	        	if (!movieID.equals("")) {
 	        		
 	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
-	        		setAddRmBtnTxt();
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
@@ -832,7 +839,7 @@ public class GUI {
 			    if (!movieID.equals("")) {
 
 	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
-	        		setAddRmBtnTxt();
+	        		
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();

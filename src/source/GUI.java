@@ -70,6 +70,7 @@ public class GUI {
 	/** Select random movie from list button. */
 	public static JButton btnSelectRandom;
 	
+	/** Button used to Login. */
 	public static JButton btnLogin;
 	
 	/** Movie info label. */
@@ -81,6 +82,7 @@ public class GUI {
 	/** Label for indicating which tab is displayed in the table. */
 	private static JLabel lblTab;
 	
+	/** Label used to represent the UserName of who is logged in*/
 	private static JLabel lblUserName;
 	
 	/** Movie info scroll pane. */
@@ -116,9 +118,6 @@ public class GUI {
 	/** Upcoming movies toggle button. */
 	public static JToggleButton tglbtnUpcoming;
 	
-	/** Stores list of movies from movie database. */
-	//private static List<MovieDb> movieList;
-	
 	/** Label for displaying string. */
 	private static String lblString;
 	
@@ -126,6 +125,7 @@ public class GUI {
 	private static TmdbApi tmdbApi
 		= new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 	
+	/** An Login object to access the Login J Dialog. */
 	static LogIn logIn;
 	
 	/** Favorites movies toggle button. */

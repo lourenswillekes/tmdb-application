@@ -178,13 +178,13 @@ public class GUI {
 	private void LoadLoginFrame()
 	{
 		api = new ApiFunctions();
-		api.setPassword(null);
-		api.setUserName(null);
+		api.setPassword("guest");
+		api.setUserName("guest");
 		session = new GuestSession();
 		
 		logIn = new LogIn(api);
 		
-		if(api.getUserName() != null && api.getPassword() != null)
+		if(api.getUserName() != "guest" && api.getPassword() != "guest")
 		{
 			session = new AccountSession(api.getUserName(), api.getPassword());
 		}
@@ -748,11 +748,27 @@ public class GUI {
 		// Login Button Listener
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				//logIn = new LogIn(api);
+				
+				String tempUserName = new String(api.getUserName());
+				String tempPassword = new String(api.getPassword());
+				
+				api.setUserName(null);
+				api.setPassword(null);
 				
 				final MovieDb temp = session.getSelectedMovie();
 				
-				session = new AccountSession("parkourlour", "passNEWword");
+				logIn = new LogIn(api);
+				
+				if(api.getUserName() != "guest" && api.getPassword() != "guest")
+				{
+					session = new AccountSession(api.getUserName(), api.getPassword());
+				}
+				else
+				{
+					api.setUserName(tempUserName);
+					api.setPassword(tempPassword);
+				}
+				
 				session.setSelectedMovie(temp);
 				setAddRmBtnTxt();
 				

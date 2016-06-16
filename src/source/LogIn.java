@@ -25,22 +25,11 @@ import java.awt.event.ActionEvent;
 
 public class LogIn extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
+	public  JPanel contentPanel = new JPanel();
 	private JPasswordField passwordField;
 	private JTextField UserNameField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			LogIn dialog = new LogIn(new ApiFunctions());
-			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
+	Boolean isClosed;
 
 	/**
 	 * Create the dialog.
@@ -63,9 +52,7 @@ public class LogIn extends JDialog {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					//Function for registering 
-					
-					
+					//Function for registering
 				}
 			});
 			button.setBounds(10, 12, 88, 23);
@@ -80,9 +67,7 @@ public class LogIn extends JDialog {
 					String password = new String(temp);
 					a.setUserName(username);
 					a.setPassword(password);
-					
-					a.setSessionToken(a.getSessionToken());
-					
+					setIsClosed(true);
 					dispose();
 					//Function for Signing in
 				}
@@ -112,10 +97,27 @@ public class LogIn extends JDialog {
 			contentPanel.add(label);
 		}
 		
+		JButton btnCtnAsGuest = new JButton("Continue As Guest");
+		btnCtnAsGuest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		btnCtnAsGuest.setBounds(10, 64, 187, 23);
+		contentPanel.add(btnCtnAsGuest);
 		
-		
+		setAlwaysOnTop(true);
+		setModal(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
+		setIsClosed(false);
 	}
 
+	public Boolean getIsClosed() {
+		return isClosed;
+	}
+
+	public void setIsClosed(Boolean isClosed) {
+		this.isClosed = isClosed;
+	}
 }

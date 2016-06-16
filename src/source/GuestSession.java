@@ -1,6 +1,7 @@
 package source;
 
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.core.SessionToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,5 +119,6 @@ public class GuestSession implements ISession {
 	public final boolean isSelectedWatchList() {
 		return guestWatchList.contains(selected);
 	}
+
 	
 }

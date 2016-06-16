@@ -41,13 +41,11 @@ public class AccountSession implements ISession {
 		final TmdbApi api = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 		final TmdbAuthentication tmdbAuth = api.getAuthentication();
 		final TokenSession sess = tmdbAuth.getSessionLogin(username, password);
-
 		tkn = new SessionToken(sess.getSessionId());
 		acc = api.getAccount();
 		aid = new AccountID(acc.getAccount(tkn).getId());
 
 	}
-	
 	
 	/**
 	 * This method returns the user's favorites.

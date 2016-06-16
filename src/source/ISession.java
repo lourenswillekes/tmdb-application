@@ -1,6 +1,7 @@
 package source;
 
 import info.movito.themoviedbapi.model.MovieDb;
+
 import java.util.List;
 
 /**
@@ -74,5 +75,6 @@ public interface ISession {
 	 * @return true if found, else false
 	 */
 	boolean isSelectedWatchList();
+
 	
 }

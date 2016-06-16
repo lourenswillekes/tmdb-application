@@ -170,7 +170,25 @@ public class GUI {
 	 * @throws IOException 
 	 */
 	public GUI() throws IOException {
+		
+		LoadLoginFrame();
 		initialize();
+	}
+	
+	private void LoadLoginFrame()
+	{
+		api = new ApiFunctions();
+		api.setPassword(null);
+		api.setUserName(null);
+		session = new GuestSession();
+		
+		logIn = new LogIn(api);
+		
+		if(api.getUserName() != null && api.getPassword() != null)
+		{
+			session = new AccountSession(api.getUserName(), api.getPassword());
+		}
+		
 	}
 
 	/**
@@ -179,9 +197,9 @@ public class GUI {
 	 */
 	private void initialize() throws IOException {
 		
-		api = new ApiFunctions();
+		//api = new ApiFunctions();
 		
-		session = new GuestSession();
+		//session = new GuestSession();
 		
 		tmdbMovies = tmdbApi.getMovies();
 		
@@ -189,6 +207,7 @@ public class GUI {
 		frame.setBounds(100, 100, 950, 575);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		
 		
 		createGUI();
 		

@@ -2,6 +2,7 @@ package source;
 
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.Video;
+import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 
@@ -187,8 +188,8 @@ public class GUI {
 		if(api.getUserName() != "guest" && api.getPassword() != "guest")
 		{
 			session = new AccountSession(api.getUserName(), api.getPassword());
+			api.setSessionToken(((AccountSession) session).getTkn());
 		}
-		
 	}
 
 	/**
@@ -207,7 +208,6 @@ public class GUI {
 		frame.setBounds(100, 100, 950, 575);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
 		
 		createGUI();
 		
@@ -467,6 +467,11 @@ public class GUI {
 		lblUserName.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblUserName.setBounds(820, 25, 356, 29);
 		frame.getContentPane().add(lblUserName);
+		
+		if(api.getUserName() != "guest" && api.getPassword() != "guest")
+		{
+			lblUserName.setText(api.getaccountName());
+		}
 		
 		// Now Playing Button
 		tglbtnNowPlaying = new JToggleButton("Now Playing");
@@ -751,28 +756,36 @@ public class GUI {
 				
 				String tempUserName = new String(api.getUserName());
 				String tempPassword = new String(api.getPassword());
+				SessionToken tempSession = api.getSessionToken();
 				
 				api.setUserName(null);
 				api.setPassword(null);
+				api.setSessionToken(null);
 				
 				final MovieDb temp = session.getSelectedMovie();
 				
 				logIn = new LogIn(api);
 				
-				if(api.getUserName() != "guest" && api.getPassword() != "guest")
-				{
-					session = new AccountSession(api.getUserName(), api.getPassword());
-				}
-				else
+				if(api.getUserName() == null && api.getPassword() == null)
 				{
 					api.setUserName(tempUserName);
 					api.setPassword(tempPassword);
+					api.setSessionToken(tempSession);
+				}
+				else if(api.getUserName() != "guest" && api.getPassword() != "guest")
+				{
+					session = new AccountSession(api.getUserName(), api.getPassword());
+					api.setSessionToken(((AccountSession) session).getTkn());
+				}
+				else if(api.getUserName() == "guest" && api.getPassword() == "guest")
+				{
+					session = new GuestSession();
 				}
 				
 				session.setSelectedMovie(temp);
 				setAddRmBtnTxt();
 				
-				lblUserName.setText("sup dude");
+				lblUserName.setText(api.getaccountName());
 				
 				if (lblString.equals("Top 20 Favorite Movies")) {
 					api.setMovieList(session.getFavorites());

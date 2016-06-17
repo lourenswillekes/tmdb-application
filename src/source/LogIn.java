@@ -100,6 +100,8 @@ public class LogIn extends JDialog {
 		JButton btnCtnAsGuest = new JButton("Continue As Guest");
 		btnCtnAsGuest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				a.setUserName("guest");
+				a.setPassword("guest");
 				dispose();
 			}
 		});

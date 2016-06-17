@@ -204,6 +204,10 @@ public class ApiFunctions implements IApiFunctions {
 		
 		// There are two ways to generate session id
 		// Generating session id using only API calls (requires username and password)
+		if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
+		{
+			return null;
+		}
 		TmdbAuthentication tmdbAuth = tmdbApi.getAuthentication();
 		TokenAuthorisation tokenAuth = tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(), this.UserName, this.Password);
 		TokenSession tokenSession = tmdbAuth.getSessionToken(tokenAuth);
@@ -273,7 +277,7 @@ public class ApiFunctions implements IApiFunctions {
 	 * If sessionToken is NULL, then returns blank string
 	 */
 	public final String getaccountName() {
-		
+
 		if(this.sessionToken != null)
 		{
 			TmdbAccount tmdbAccount = tmdbApi.getAccount();
@@ -281,8 +285,11 @@ public class ApiFunctions implements IApiFunctions {
 			String ret = new String("Hello " +act.getUserName());
 			return ret;
 		}
+		else if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
+		{
+			return "Hello Guest";
+		}
 		else
 			return "";
 	}
-	
 }

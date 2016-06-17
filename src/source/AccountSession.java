@@ -42,9 +42,9 @@ public class AccountSession implements ISession {
 		final TmdbAuthentication tmdbAuth = api.getAuthentication();
 		final TokenSession sess = tmdbAuth.getSessionLogin(username, password);
 		tkn = new SessionToken(sess.getSessionId());
+		setTkn(tkn);
 		acc = api.getAccount();
 		aid = new AccountID(acc.getAccount(tkn).getId());
-
 	}
 	
 	/**
@@ -135,6 +135,14 @@ public class AccountSession implements ISession {
 	public final boolean isSelectedWatchList() {
 		List<MovieDb> wat = this.getWatchList();
 		return wat.contains(selected);
+	}
+
+	public SessionToken getTkn() {
+		return tkn;
+	}
+
+	public void setTkn(SessionToken tkn) {
+		this.tkn = tkn;
 	}
 
 }

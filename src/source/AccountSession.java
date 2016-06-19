@@ -41,13 +41,11 @@ public class AccountSession implements ISession {
 		final TmdbApi api = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 		final TmdbAuthentication tmdbAuth = api.getAuthentication();
 		final TokenSession sess = tmdbAuth.getSessionLogin(username, password);
-
 		tkn = new SessionToken(sess.getSessionId());
+		setTkn(tkn);
 		acc = api.getAccount();
 		aid = new AccountID(acc.getAccount(tkn).getId());
-
 	}
-	
 	
 	/**
 	 * This method returns the user's favorites.
@@ -137,6 +135,14 @@ public class AccountSession implements ISession {
 	public final boolean isSelectedWatchList() {
 		List<MovieDb> wat = this.getWatchList();
 		return wat.contains(selected);
+	}
+
+	public SessionToken getTkn() {
+		return tkn;
+	}
+
+	public void setTkn(SessionToken tkn) {
+		this.tkn = tkn;
 	}
 
 }

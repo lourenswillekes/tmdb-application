@@ -1,12 +1,15 @@
 package source;
 
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.Video;
+import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -14,6 +17,7 @@ import java.awt.image.RescaleOp;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -25,14 +29,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 
 /**
  * GUI Class.
@@ -43,15 +53,14 @@ public class GUI {
 	/** Instance of ApiFunctions interface. */
 	private static ApiFunctions api;
 	
-	
 	/** Declares the session. */
 	private static ISession session;
 	
-	
-	
-	
 	/** GUI frame. */
 	private static JFrame frame;
+	
+	/** Watch trailer button */
+	public static JButton btnWatchTrailer;
 	
 	/** Add to favorites button (Release #2). */
 	private static JButton btnAddRmFav;
@@ -62,6 +71,7 @@ public class GUI {
 	/** Select random movie from list button. */
 	public static JButton btnSelectRandom;
 	
+	/** Button used to Login. */
 	public static JButton btnLogin;
 	
 	/** Movie info label. */
@@ -73,6 +83,7 @@ public class GUI {
 	/** Label for indicating which tab is displayed in the table. */
 	private static JLabel lblTab;
 	
+	/** Label used to represent the UserName of who is logged in*/
 	private static JLabel lblUserName;
 	
 	/** Movie info scroll pane. */
@@ -108,9 +119,6 @@ public class GUI {
 	/** Upcoming movies toggle button. */
 	public static JToggleButton tglbtnUpcoming;
 	
-	/** Stores list of movies from movie database. */
-	//private static List<MovieDb> movieList;
-	
 	/** Label for displaying string. */
 	private static String lblString;
 	
@@ -118,6 +126,7 @@ public class GUI {
 	private static TmdbApi tmdbApi
 		= new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 	
+	/** An Login object to access the Login J Dialog. */
 	static LogIn logIn;
 	
 	/** Favorites movies toggle button. */
@@ -126,11 +135,16 @@ public class GUI {
 	/** Watchlist movies toggle button. */
 	public static JToggleButton tglbtnWatchList;
 	
+	/** TMDb Movies object for accessing all movies */
+	public static TmdbMovies tmdbMovies;
+	
 	/**
 	 * Launch the application.
 	 * @param args vars
 	 */
 	public static void main(final String[] args) {
+		NativeInterface.open();
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -141,6 +155,15 @@ public class GUI {
 				}
 			}
 		});
+		
+		NativeInterface.runEventPump();
+		// don't forget to properly close native components
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		    @Override
+		    public void run() {
+		    	NativeInterface.close();
+		    }
+		}));
 	}
 
 	/**
@@ -148,7 +171,25 @@ public class GUI {
 	 * @throws IOException 
 	 */
 	public GUI() throws IOException {
+		
+		LoadLoginFrame();
 		initialize();
+	}
+	
+	private void LoadLoginFrame()
+	{
+		api = new ApiFunctions();
+		api.setPassword("guest");
+		api.setUserName("guest");
+		session = new GuestSession();
+		
+		logIn = new LogIn(api);
+		
+		if(api.getUserName() != "guest" && api.getPassword() != "guest")
+		{
+			session = new AccountSession(api.getUserName(), api.getPassword());
+			api.setSessionToken(((AccountSession) session).getTkn());
+		}
 	}
 
 	/**
@@ -157,9 +198,11 @@ public class GUI {
 	 */
 	private void initialize() throws IOException {
 		
-		api = new ApiFunctions();
+		//api = new ApiFunctions();
 		
-		session = new GuestSession();
+		//session = new GuestSession();
+		
+		tmdbMovies = tmdbApi.getMovies();
 		
 		frame = new JFrame("Super Cool App");
 		frame.setBounds(100, 100, 950, 575);
@@ -219,8 +262,6 @@ public class GUI {
 	 */
 	private static void displayMovieInfo(final int movieID) throws IOException {
 		
-		TmdbMovies tmdbMovies = tmdbApi.getMovies();
-		
 		// Retrieve information on a movie given movie id
 		MovieDb movie = tmdbMovies.getMovie(movieID, "en");
 		
@@ -259,6 +300,7 @@ public class GUI {
 		// Re-create GUI
 		createGUI();
 		
+		setAddRmBtnTxt();
 		txtMovieInfo.setText(api.getMovieInfo(movie.getId()));
 		txtPlotOverview.setText(movie.getOverview());
 		txtMovieInfo.setCaretPosition(0);
@@ -286,13 +328,12 @@ public class GUI {
 			tglbtnSearch.setSelected(true);
 		}
 		if (lblString.equals("Top 20 Favorite Movies")) {
-			tglbtnSearch.setSelected(true);
+			tglbtnFavorites.setSelected(true);
 		}
 		if (lblString.equals("Top 20 WatchList Movies")) {
-			tglbtnSearch.setSelected(true);
+			tglbtnWatchList.setSelected(true);
 		}
 	}
-	
 	
 	/**
 	 * Sets the background as the movie backdrop.
@@ -377,6 +418,42 @@ public class GUI {
 	}
 	
 	/**
+	 * Opens a new JFrame and plays the trailer in a separate thread
+	 * @param path youtube path to trailer
+	 */
+	public static void displayTrailer(String path) {
+		
+		new Thread(new Runnable() {
+			public void run() {
+				SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					JFrame trailer = new JFrame();
+					trailer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					trailer.getContentPane().add(getBrowserPanel(path), BorderLayout.CENTER);
+					trailer.setSize(800, 600);
+					trailer.setLocationByPlatform(true);
+					trailer.setVisible(true);
+					}
+				});
+			}
+		}).start(); 
+	}
+	
+	/**
+	 * Gets web browser JPanel for displaying trailer
+	 * @param path Movie trailer path
+	 * @return Web Browser JPanel
+	 */
+	public static JPanel getBrowserPanel(String path) {
+	    JPanel webBrowserPanel = new JPanel(new BorderLayout());
+	    JWebBrowser webBrowser = new JWebBrowser();
+	    webBrowserPanel.add(webBrowser, BorderLayout.CENTER);
+	    webBrowser.setBarsVisible(false);
+	    webBrowser.navigate(path);
+	    return webBrowserPanel;
+	}
+	
+	/**
 	 * Used to create the GUI.
 	 * @throws IOException e
 	 */
@@ -391,6 +468,11 @@ public class GUI {
 		lblUserName.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblUserName.setBounds(820, 25, 356, 29);
 		frame.getContentPane().add(lblUserName);
+		
+		if(api.getUserName() != "guest" && api.getPassword() != "guest")
+		{
+			lblUserName.setText(api.getaccountName());
+		}
 		
 		// Now Playing Button
 		tglbtnNowPlaying = new JToggleButton("Now Playing");
@@ -425,9 +507,15 @@ public class GUI {
 		
 		// Select Random Button
 		btnSelectRandom = new JButton("Select Random");
-		btnSelectRandom.setBounds(353, 493, 164, 32);
+		btnSelectRandom.setBounds(160, 493, 164, 32);
 		btnSelectRandom.setFont(new Font("Modern No. 20", Font.BOLD, 14));
 		frame.getContentPane().add(btnSelectRandom);
+		
+		// Watch Trailer Button (Release #2)
+		btnWatchTrailer = new JButton("Watch Trailer");
+		btnWatchTrailer.setBounds(728, 325, 170, 32);
+		btnWatchTrailer.setFont(new Font("Modern No. 20", Font.BOLD, 14));
+		frame.getContentPane().add(btnWatchTrailer);
 		
 		// Add/Rm Favorites Button (Release #2)
 		btnAddRmFav = new JButton("Add To Favorites");
@@ -481,7 +569,7 @@ public class GUI {
 		
 		// Movie Info Scroll/Text Pane
 		spMovieInfo = new JScrollPane();
-		spMovieInfo.setBounds(723, 79, 180, 276);
+		spMovieInfo.setBounds(723, 79, 180, 235);
 		frame.getContentPane().add(spMovieInfo);
 		txtMovieInfo = new JTextPane();
 		txtMovieInfo.setBackground(new Color(65, 105, 225));
@@ -492,8 +580,10 @@ public class GUI {
 		spMovieInfo.setViewportView(txtMovieInfo);
 		spMovieInfo.setOpaque(false);
 		spMovieInfo.getViewport().setOpaque(false);
+		
+		// Movie List Scroll Pane
 		spMovieList = new JScrollPane();
-		spMovieList.setBounds(10, 100, 501, 328);
+		spMovieList.setBounds(10, 100, 501, 378);
 		frame.getContentPane().add(spMovieList);
 		
 		// Movie List Table
@@ -664,16 +754,48 @@ public class GUI {
 		// Login Button Listener
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				//logIn = new LogIn(api);
+				
+				String tempUserName = new String(api.getUserName());
+				String tempPassword = new String(api.getPassword());
+				SessionToken tempSession = api.getSessionToken();
+				
+				api.setUserName(null);
+				api.setPassword(null);
+				api.setSessionToken(null);
 				
 				final MovieDb temp = session.getSelectedMovie();
 				
-				session = new AccountSession("parkourlour", "passNEWword");
+				logIn = new LogIn(api);
+				
+				if(api.getUserName() == null && api.getPassword() == null)
+				{
+					api.setUserName(tempUserName);
+					api.setPassword(tempPassword);
+					api.setSessionToken(tempSession);
+				}
+				else if(api.getUserName() != "guest" && api.getPassword() != "guest")
+				{
+					session = new AccountSession(api.getUserName(), api.getPassword());
+					api.setSessionToken(((AccountSession) session).getTkn());
+				}
+				else if(api.getUserName() == "guest" && api.getPassword() == "guest")
+				{
+					session = new GuestSession();
+				}
+				
 				session.setSelectedMovie(temp);
 				setAddRmBtnTxt();
 				
-				lblUserName.setText("sup dude");
+				lblUserName.setText(api.getaccountName());
 				
+				if (lblString.equals("Top 20 Favorite Movies")) {
+					api.setMovieList(session.getFavorites());
+					fillMovieTable(api.getMovieList());
+				}
+				else if (lblString.equals("Top 20 WatchList Movies")) {
+					api.setMovieList(session.getWatchList());
+					fillMovieTable(api.getMovieList());
+				} 
 			}
 		});
 		
@@ -736,7 +858,6 @@ public class GUI {
 	        	if (!movieID.equals("")) {
 	        		
 	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
-	        		setAddRmBtnTxt();
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
@@ -767,7 +888,7 @@ public class GUI {
 			    if (!movieID.equals("")) {
 
 	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
-	        		setAddRmBtnTxt();
+	        		
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
@@ -782,6 +903,29 @@ public class GUI {
 					reSelectButton();
 					fillMovieTable(api.getMovieList());
 	        	}
+			}
+		});
+		
+		// Watch Trailer Button Listener (Release #2)
+		btnWatchTrailer.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				List<Video> videos = tmdbMovies.getVideos(session.getSelectedMovie().getId(), "en");
+				if(videos != null) {
+					if (0 == videos.size()) {
+						System.out.println("Videos not available for this movie\n");
+					} else {
+						Video v = new Video();
+						
+						Iterator<Video> iterator = videos.iterator();
+						//while (iterator.hasNext()) {
+						v = iterator.next(); // Just gets first video available
+						//}
+						
+						String trailerPath = "https://www.youtube.com/embed/" + v.getKey();
+						
+						displayTrailer(trailerPath);
+					}
+				}
 			}
 		});
 		

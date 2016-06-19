@@ -146,65 +146,91 @@ public class ApiFunctions implements IApiFunctions {
 		return movieInfo;
 	}
 
+	/**
+	 * This method returns the user password string used to Login
+	 * @return a string representing the password
+	 */
 	public String getPassword() {
 		return Password;
 	}
 
-
+	/**	
+	 * This method is used to set the password
+	 * @param password A string representation of the password to set 
+	 */
 	public void setPassword(String password) {
 		Password = password;
 	}
 
-
+	/**
+	 * This method returns the user UserName used to Login
+	 * @return a string representing the username
+	 */
 	public String getUserName() {
 		return UserName;
 	}
 
-
+	/**
+	 * This method is used to set the username 
+	 * @param userName A string representation of the username to set
+	 */
 	public void setUserName(String userName) {
 		UserName = userName;
 	}
 
-
+	/**
+	 * This method Returns the active movie List
+	 * @return the list of movies that has been set 
+	 */
 	public List<MovieDb> getMovieList() {
 		return movieList;
 	}
 
-
+	/**
+	 * This method is used to set the movieList
+	 * @param movieList the List of movies to set
+	 */
 	public void setMovieList(List<MovieDb> movieList) {
 		this.movieList = movieList;
 	}
 
-
+	/**
+	 * This method gets the session token from the sessionToken Field
+	 * Uses the userName and password to login to the movie DB and get a 
+	 * session ID
+	 * @return The session token that is used to work session specific methods  
+	 */
 	public SessionToken getSessionToken() {
 		
 		// There are two ways to generate session id
 		// Generating session id using only API calls (requires username and password)
+		if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
+		{
+			return null;
+		}
 		TmdbAuthentication tmdbAuth = tmdbApi.getAuthentication();
 		TokenAuthorisation tokenAuth = tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(), this.UserName, this.Password);
 		TokenSession tokenSession = tmdbAuth.getSessionToken(tokenAuth);
 		String sessionId = tokenSession.getSessionId();
 		SessionToken sessionToken = new SessionToken(sessionId);
-		
-		// Generating session id via the website (user interaction involved)
-		// Step 1: create a new request token
-		//		http://api.themoviedb.org/3/authentication/token/new?api_key=your-api-key
-		//		(note down the request_token from the response)
-		// Step 2: ask the user for permission
-		//		https://www.themoviedb.org/authenticate/request_token
-		// Step 3: create a session id
-		//		http://api.themoviedb.org/3/authentication/session/new?api_key=api-key&request_token=request-token
-		//		(use session-id value in the response to set the value for sessionId variable in the code below
-		//String sessionId = "session-id";
-		//SessionToken sessionToken = new SessionToken(sessionId);		
+				
 		return sessionToken;
 	}
 	
+	/**
+	 * THis method is used to set the sessionToken to the Field
+	 * @param sessionToken: A session Token that has been made from 
+	 * logging in
+	 */
 	public void setSessionToken(SessionToken sessionToken) {
 		this.sessionToken = sessionToken;
 	}
 
-
+	/**
+	 * This method Gets the favorites page of movies from a users SessionToekn
+	 * @param page of the favorites results movies list
+	 * @return the list of movies from the favorites on the requested page
+	 */
 	public final List<MovieDb> getFavorites(final int page) {
 		List<MovieDb> upc;
 		if(this.sessionToken != null)
@@ -222,6 +248,11 @@ public class ApiFunctions implements IApiFunctions {
 		return upc;
 	}
 	
+	/**
+	 * This method Gets the watchlist page of movies from a users SessionToekn
+	 * @param page of the  watchlist results movies list
+	 * @return the list of movies from the  watchlist on the requested page
+	 */
 	public final List<MovieDb> getWatchList(final int page) {
 		
 		List<MovieDb> upc;
@@ -240,8 +271,13 @@ public class ApiFunctions implements IApiFunctions {
 		return upc;
 	}
 	
+	/**
+	 * Gets the account name from the session Token
+	 * @return a String representing the accountName
+	 * If sessionToken is NULL, then returns blank string
+	 */
 	public final String getaccountName() {
-		
+
 		if(this.sessionToken != null)
 		{
 			TmdbAccount tmdbAccount = tmdbApi.getAccount();
@@ -249,8 +285,11 @@ public class ApiFunctions implements IApiFunctions {
 			String ret = new String("Hello " +act.getUserName());
 			return ret;
 		}
+		else if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
+		{
+			return "Hello Guest";
+		}
 		else
 			return "";
 	}
-	
 }

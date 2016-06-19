@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-//import javafx.scene.control.PasswordField;
-//import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -25,28 +25,17 @@ import java.awt.event.ActionEvent;
 
 public class LogIn extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
+	public  JPanel contentPanel = new JPanel();
 	private JPasswordField passwordField;
 	private JTextField UserNameField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			LogIn dialog = new LogIn(new ApiFunctions());
-			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
+	Boolean isClosed;
 
 	/**
 	 * Create the dialog.
 	 */
 	public LogIn(ApiFunctions a) {
-		setBounds(100, 100, 390, 200);
+		setBounds(100, 100, 347, 137);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -63,13 +52,10 @@ public class LogIn extends JDialog {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					//Function for registering 
-					
-					
+					//Function for registering
 				}
 			});
-			//button.setBounds(10, 12, 88, 23);
-			button.setBounds(100, 109, 90, 23);
+			button.setBounds(10, 12, 88, 23);
 			contentPanel.add(button);
 		}
 		{
@@ -81,43 +67,59 @@ public class LogIn extends JDialog {
 					String password = new String(temp);
 					a.setUserName(username);
 					a.setPassword(password);
-					
-					a.setSessionToken(a.getSessionToken());
-					
+					setIsClosed(true);
 					dispose();
 					//Function for Signing in
 				}
 			});
-			button.setBounds(200, 109, 90, 23);
+			button.setBounds(108, 12, 89, 23);
 			contentPanel.add(button);
 		}
 		{
 			passwordField = new JPasswordField();
-			passwordField.setBounds(100, 80, 190, 20);
+			passwordField.setBounds(207, 61, 105, 20);
 			contentPanel.add(passwordField);
 		}
 		{
 			UserNameField = new JTextField();
-			UserNameField.setBounds(100, 45, 190, 20);
+			UserNameField.setBounds(207, 26, 107, 20);
 			UserNameField.setColumns(10);
 			contentPanel.add(UserNameField);
 		}
 		{
 			JLabel label = new JLabel("Username");
-			label.setBounds(100, 30, 80, 14);
+			label.setBounds(207, 11, 80, 14);
 			contentPanel.add(label);
 		}
 		{
 			JLabel label = new JLabel("Password");
-			label.setBounds(100, 65, 80, 14);
+			label.setBounds(207, 46, 80, 14);
 			contentPanel.add(label);
 		}
 		
+		JButton btnCtnAsGuest = new JButton("Continue As Guest");
+		btnCtnAsGuest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				a.setUserName("guest");
+				a.setPassword("guest");
+				dispose();
+			}
+		});
+		btnCtnAsGuest.setBounds(10, 64, 187, 23);
+		contentPanel.add(btnCtnAsGuest);
 		
-		
+		setAlwaysOnTop(true);
+		setModal(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
-		setResizable(false);
+		setIsClosed(false);
 	}
 
+	public Boolean getIsClosed() {
+		return isClosed;
+	}
+
+	public void setIsClosed(Boolean isClosed) {
+		this.isClosed = isClosed;
+	}
 }

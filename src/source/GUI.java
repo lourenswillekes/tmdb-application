@@ -961,7 +961,10 @@ public class GUI {
 				List<Video> videos = tmdbMovies.getVideos(session.getSelectedMovie().getId(), "en");
 				if(videos != null) {
 					if (0 == videos.size()) {
-						System.out.println("Videos not available for this movie\n");
+						JOptionPane.showMessageDialog(frame,
+						        "No Trailer is Available for this video",
+						        "No Trailer Available ",
+						        JOptionPane.ERROR_MESSAGE);
 					} else {
 						Video v = new Video();
 						

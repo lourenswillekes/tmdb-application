@@ -1,7 +1,6 @@
 package source;
 
 import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.core.SessionToken;
 
 import java.util.ArrayList;
 import java.util.List;

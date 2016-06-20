@@ -189,6 +189,20 @@ public class GUI {
 		{
 			session = new AccountSession(api.getUserName(), api.getPassword());
 			api.setSessionToken(((AccountSession) session).getTkn());
+			
+			while(((AccountSession) session).getTkn() == null)
+			{
+				api.setPassword("guest");
+				api.setUserName("guest");
+				logIn = new LogIn(api);
+				if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
+				{
+					session = new GuestSession();
+					break;
+				}
+				session = new AccountSession(api.getUserName(), api.getPassword());
+				api.setSessionToken(((AccountSession) session).getTkn());
+			}
 		}
 	}
 
@@ -209,6 +223,8 @@ public class GUI {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		
+		frame.setResizable(false);
 		
 		createGUI();
 		
@@ -777,6 +793,39 @@ public class GUI {
 				{
 					session = new AccountSession(api.getUserName(), api.getPassword());
 					api.setSessionToken(((AccountSession) session).getTkn());
+					while(((AccountSession) session).getTkn() == null)
+					{
+						api.setUserName(null);
+						api.setPassword(null);
+						api.setSessionToken(null);
+						
+						logIn = new LogIn(api);
+						
+						if(api.getUserName() == null && api.getPassword() == null)
+						{
+							api.setUserName(tempUserName);
+							api.setPassword(tempPassword);
+							api.setSessionToken(tempSession);
+							
+							if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
+							{
+								session = new GuestSession();
+							}
+							else
+							{
+								session = new AccountSession(api.getUserName(), api.getPassword());
+								api.setSessionToken(((AccountSession) session).getTkn());	
+							}
+							break;
+						}
+						else if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
+						{
+							session = new GuestSession();
+							break;
+						}
+						session = new AccountSession(api.getUserName(), api.getPassword());
+						api.setSessionToken(((AccountSession) session).getTkn());
+					}
 				}
 				else if(api.getUserName() == "guest" && api.getPassword() == "guest")
 				{

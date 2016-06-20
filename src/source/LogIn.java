@@ -2,19 +2,14 @@ package source;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
-import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -23,19 +18,28 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/** 
+ * Class that extends JDialog to Create Login GUI
+ * @author Caleb Hayward
+ */
 public class LogIn extends JDialog {
 
+	/** Private Serial Version UID */
+	private static final long serialVersionUID = 1L;
+	/** Public JPanel for Loging in GUI */
 	public  JPanel contentPanel = new JPanel();
+	/** Private Field for the Password */
 	private JPasswordField passwordField;
+	/** Private Field for the UserName*/
 	private JTextField UserNameField;
 	
-	Boolean isClosed;
-
 	/**
-	 * Create the dialog.
+	 * Creates the Login GUI and contains the action Listeners
+	 * @param a is the API Functions Class that contains information
+	 * of the parent GUI
 	 */
 	public LogIn(ApiFunctions a) {
-		setBounds(100, 100, 347, 137);
+		setBounds(500, 200, 347, 137);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -67,7 +71,6 @@ public class LogIn extends JDialog {
 					String password = new String(temp);
 					a.setUserName(username);
 					a.setPassword(password);
-					setIsClosed(true);
 					dispose();
 					//Function for Signing in
 				}
@@ -110,16 +113,8 @@ public class LogIn extends JDialog {
 		
 		setAlwaysOnTop(true);
 		setModal(true);
+		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
-		setIsClosed(false);
-	}
-
-	public Boolean getIsClosed() {
-		return isClosed;
-	}
-
-	public void setIsClosed(Boolean isClosed) {
-		this.isClosed = isClosed;
 	}
 }

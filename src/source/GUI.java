@@ -223,6 +223,8 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		frame.setResizable(false);
+		
 		createGUI();
 		
 		api.setMovieList(api.getNowPlayingMovies(1));

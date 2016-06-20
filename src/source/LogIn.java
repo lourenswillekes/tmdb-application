@@ -39,7 +39,7 @@ public class LogIn extends JDialog {
 	 * of the parent GUI
 	 */
 	public LogIn(ApiFunctions a) {
-		setBounds(100, 100, 347, 137);
+		setBounds(500, 200, 347, 137);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -113,6 +113,7 @@ public class LogIn extends JDialog {
 		
 		setAlwaysOnTop(true);
 		setModal(true);
+		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}

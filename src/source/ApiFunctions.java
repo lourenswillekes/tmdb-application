@@ -1,6 +1,5 @@
 package source;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.config.Account;
 import info.movito.themoviedbapi.model.config.TokenAuthorisation;
 import info.movito.themoviedbapi.model.config.TokenSession;
-import info.movito.themoviedbapi.model.core.AccountID;
 import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.people.PersonCast;
 
@@ -27,10 +25,17 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  */
 public class ApiFunctions implements IApiFunctions {
 	
-	String Password;
-	String UserName;
-	List<MovieDb> movieList;
-	SessionToken sessionToken;
+	/** Declares String for password. */
+	private String password;
+	
+	/** Declares String for userName. */
+	private String userName;
+	
+	/** Declares the movieList. */
+	private List<MovieDb> movieList;
+	
+	/** Declares the sessionToken. */
+	private SessionToken sessionToken;
 	
 	/** tmdbApi object to access the database. */
 	private TmdbApi tmdbApi = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
@@ -147,149 +152,102 @@ public class ApiFunctions implements IApiFunctions {
 	}
 
 	/**
-	 * This method returns the user password string used to Login
+	 * This method returns the user password string used to Login.
 	 * @return a string representing the password
 	 */
-	public String getPassword() {
-		return Password;
+	public final String getPassword() {
+		return password;
 	}
 
 	/**	
-	 * This method is used to set the password
-	 * @param password A string representation of the password to set 
+	 * This method is used to set the password.
+	 * @param pass A string representation of the password to set 
 	 */
-	public void setPassword(String password) {
-		Password = password;
+	public final void setPassword(final String pass) {
+		password = pass;
 	}
 
 	/**
-	 * This method returns the user UserName used to Login
+	 * This method returns the user UserName used to Login.
 	 * @return a string representing the username
 	 */
-	public String getUserName() {
-		return UserName;
+	public final String getUserName() {
+		return userName;
 	}
 
 	/**
-	 * This method is used to set the username 
-	 * @param userName A string representation of the username to set
+	 * This method is used to set the username.
+	 * @param user A string representation of the username to set
 	 */
-	public void setUserName(String userName) {
-		UserName = userName;
+	public final void setUserName(final String user) {
+		userName = user;
 	}
 
 	/**
-	 * This method Returns the active movie List
+	 * This method Returns the active movie List.
 	 * @return the list of movies that has been set 
 	 */
-	public List<MovieDb> getMovieList() {
+	public final List<MovieDb> getMovieList() {
 		return movieList;
 	}
 
 	/**
-	 * This method is used to set the movieList
-	 * @param movieList the List of movies to set
+	 * This method is used to set the movieList.
+	 * @param movList the List of movies to set
 	 */
-	public void setMovieList(List<MovieDb> movieList) {
-		this.movieList = movieList;
+	public final void setMovieList(final List<MovieDb> movList) {
+		this.movieList = movList;
 	}
 
 	/**
-	 * This method gets the session token from the sessionToken Field
+	 * This method gets the session token from the sessionToken Field.
 	 * Uses the userName and password to login to the movie DB and get a 
 	 * session ID
 	 * @return The session token that is used to work session specific methods  
 	 */
-	public SessionToken getSessionToken() {
+	public final SessionToken getSessionToken() {
 		
-		// There are two ways to generate session id
-		// Generating session id using only API calls (requires username and password)
-		if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
-		{
+		// Generating session id
+		if (this.userName.equalsIgnoreCase("guest")
+				&& this.password.equalsIgnoreCase("guest")) {
 			return null;
 		}
 		TmdbAuthentication tmdbAuth = tmdbApi.getAuthentication();
-		TokenAuthorisation tokenAuth = tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(), this.UserName, this.Password);
+		TokenAuthorisation tokenAuth
+			= tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(),
+					this.userName, this.password);
 		TokenSession tokenSession = tmdbAuth.getSessionToken(tokenAuth);
 		String sessionId = tokenSession.getSessionId();
-		SessionToken sessionToken = new SessionToken(sessionId);
+		SessionToken sessionTkn = new SessionToken(sessionId);
 				
-		return sessionToken;
+		return sessionTkn;
 	}
 	
 	/**
-	 * THis method is used to set the sessionToken to the Field
-	 * @param sessionToken: A session Token that has been made from 
-	 * logging in
+	 * THis method is used to set the sessionToken to the Field.
+	 * @param sessionTkn that has been made from logging in
 	 */
-	public void setSessionToken(SessionToken sessionToken) {
-		this.sessionToken = sessionToken;
-	}
-
-	/**
-	 * This method Gets the favorites page of movies from a users SessionToekn
-	 * @param page of the favorites results movies list
-	 * @return the list of movies from the favorites on the requested page
-	 */
-	public final List<MovieDb> getFavorites(final int page) {
-		List<MovieDb> upc;
-		if(this.sessionToken != null)
-		{
-			TmdbAccount tmdbAccount = tmdbApi.getAccount();
-			Account act = tmdbAccount.getAccount(this.sessionToken);
-			AccountID actId = new AccountID(act.getId());
-			
-			upc = tmdbAccount.getFavoriteMovies(this.sessionToken, actId).getResults();
-		}
-		else
-		{
-			upc =  new ArrayList<MovieDb>();
-		}
-		return upc;
+	public final void setSessionToken(final SessionToken sessionTkn) {
+		this.sessionToken = sessionTkn;
 	}
 	
 	/**
-	 * This method Gets the watchlist page of movies from a users SessionToekn
-	 * @param page of the  watchlist results movies list
-	 * @return the list of movies from the  watchlist on the requested page
-	 */
-	public final List<MovieDb> getWatchList(final int page) {
-		
-		List<MovieDb> upc;
-		if(this.sessionToken != null)
-		{
-			TmdbAccount tmdbAccount = tmdbApi.getAccount();
-			Account act = tmdbAccount.getAccount(this.sessionToken);
-			AccountID actId = new AccountID(act.getId());
-			
-			upc = tmdbAccount.getWatchListMovies(this.sessionToken, actId, page).getResults();
-		}
-		else
-		{
-			upc =  new ArrayList<MovieDb>();
-		}
-		return upc;
-	}
-	
-	/**
-	 * Gets the account name from the session Token
+	 * Gets the account name from the session Token.
 	 * @return a String representing the accountName
 	 * If sessionToken is NULL, then returns blank string
 	 */
 	public final String getaccountName() {
 
-		if(this.sessionToken != null)
-		{
+		if (this.sessionToken != null) {
 			TmdbAccount tmdbAccount = tmdbApi.getAccount();
 			Account act = tmdbAccount.getAccount(this.sessionToken);
-			String ret = new String("Hello " +act.getUserName());
+			String ret = new String("Hello " + act.getUserName());
 			return ret;
-		}
-		else if(this.UserName.equalsIgnoreCase("guest") && this.Password.equalsIgnoreCase("guest"))
-		{
+		} else if (this.userName.equalsIgnoreCase("guest")
+				&& this.password.equalsIgnoreCase("guest")) {
 			return "Hello Guest";
-		}
-		else
+		} else {
 			return "";
+		}
 	}
 }

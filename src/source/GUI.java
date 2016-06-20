@@ -59,7 +59,7 @@ public class GUI {
 	/** GUI frame. */
 	private static JFrame frame;
 	
-	/** Watch trailer button */
+	/** Watch trailer button. */
 	public static JButton btnWatchTrailer;
 	
 	/** Add to favorites button (Release #2). */
@@ -83,7 +83,7 @@ public class GUI {
 	/** Label for indicating which tab is displayed in the table. */
 	private static JLabel lblTab;
 	
-	/** Label used to represent the UserName of who is logged in*/
+	/** Label used to represent the UserName of who is logged in. */
 	private static JLabel lblUserName;
 	
 	/** Movie info scroll pane. */
@@ -135,7 +135,7 @@ public class GUI {
 	/** Watchlist movies toggle button. */
 	public static JToggleButton tglbtnWatchList;
 	
-	/** TMDb Movies object for accessing all movies */
+	/** TMDb Movies object for accessing all movies. */
 	public static TmdbMovies tmdbMovies;
 	
 	/**
@@ -172,12 +172,13 @@ public class GUI {
 	 */
 	public GUI() throws IOException {
 		
-		LoadLoginFrame();
+		loadLoginFrame();
 		initialize();
 	}
-	
-	private void LoadLoginFrame()
-	{
+	/**
+	 * Loads and initializes login JFrame.
+	 */
+	private void loadLoginFrame() {
 		api = new ApiFunctions();
 		api.setPassword("guest");
 		api.setUserName("guest");
@@ -185,22 +186,22 @@ public class GUI {
 		
 		logIn = new LogIn(api);
 		
-		if(api.getUserName() != "guest" && api.getPassword() != "guest")
-		{
+		if (api.getUserName() != "guest"
+				&& api.getPassword() != "guest") {
 			session = new AccountSession(api.getUserName(), api.getPassword());
 			api.setSessionToken(((AccountSession) session).getTkn());
 			
-			while(((AccountSession) session).getTkn() == null)
-			{
+			while (((AccountSession) session).getTkn() == null) {
 				api.setPassword("guest");
 				api.setUserName("guest");
 				logIn = new LogIn(api);
-				if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
-				{
+				if (api.getUserName().equalsIgnoreCase("guest")
+						&& api.getPassword().equalsIgnoreCase("guest")) {
 					session = new GuestSession();
 					break;
 				}
-				session = new AccountSession(api.getUserName(), api.getPassword());
+				session = new AccountSession(api.getUserName(),
+						api.getPassword());
 				api.setSessionToken(((AccountSession) session).getTkn());
 			}
 		}
@@ -420,7 +421,7 @@ public class GUI {
 	/**
 	 * Sets the text on the add/rm buttons based on selected movie.
 	 */
-	public static void setAddRmBtnTxt(){
+	public static void setAddRmBtnTxt() {
 		if (session.isSelectedFavorites()) {
 			btnAddRmFav.setText("Rm From Favorites");
 		} else {
@@ -434,18 +435,20 @@ public class GUI {
 	}
 	
 	/**
-	 * Opens a new JFrame and plays the trailer in a separate thread
+	 * Opens a new JFrame and plays the trailer in a separate thread.
 	 * @param path youtube path to trailer
 	 */
-	public static void displayTrailer(String path) {
+	public static void displayTrailer(final String path) {
 		
 		new Thread(new Runnable() {
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					JFrame trailer = new JFrame();
-					trailer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-					trailer.getContentPane().add(getBrowserPanel(path), BorderLayout.CENTER);
+					trailer.setDefaultCloseOperation(
+							WindowConstants.DISPOSE_ON_CLOSE);
+					trailer.getContentPane().add(getBrowserPanel(path),
+							BorderLayout.CENTER);
 					trailer.setSize(800, 600);
 					trailer.setLocationByPlatform(true);
 					trailer.setVisible(true);
@@ -456,11 +459,11 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets web browser JPanel for displaying trailer
+	 * Gets web browser JPanel for displaying trailer.
 	 * @param path Movie trailer path
 	 * @return Web Browser JPanel
 	 */
-	public static JPanel getBrowserPanel(String path) {
+	public static JPanel getBrowserPanel(final String path) {
 	    JPanel webBrowserPanel = new JPanel(new BorderLayout());
 	    JWebBrowser webBrowser = new JWebBrowser();
 	    webBrowserPanel.add(webBrowser, BorderLayout.CENTER);
@@ -485,8 +488,7 @@ public class GUI {
 		lblUserName.setBounds(820, 25, 356, 29);
 		frame.getContentPane().add(lblUserName);
 		
-		if(api.getUserName() != "guest" && api.getPassword() != "guest")
-		{
+		if (api.getUserName() != "guest" && api.getPassword() != "guest") {
 			lblUserName.setText(api.getaccountName());
 		}
 		
@@ -559,7 +561,8 @@ public class GUI {
 		// Login Button
 		btnLogin = new JButton("");
 		btnLogin.setBounds(820, 0, 110, 32);
-		String a = new String("http://www.bcwood.com/wp-content/uploads/2012/08/login_button_01.jpg");
+		String a = new String("http://www.bcwood.com/wp-content/"
+				+ "uploads/2012/08/login_button_01.jpg");
 		URL posterURL = new URL(a);
 		BufferedImage poster = ImageIO.read(posterURL);
 		Image scaled = poster.getScaledInstance(110, 32, Image.SCALE_SMOOTH);
@@ -783,52 +786,51 @@ public class GUI {
 				
 				logIn = new LogIn(api);
 				
-				if(api.getUserName() == null && api.getPassword() == null)
-				{
+				if (api.getUserName() == null
+						&& api.getPassword() == null) {
 					api.setUserName(tempUserName);
 					api.setPassword(tempPassword);
 					api.setSessionToken(tempSession);
-				}
-				else if(api.getUserName() != "guest" && api.getPassword() != "guest")
-				{
-					session = new AccountSession(api.getUserName(), api.getPassword());
+				} else if (api.getUserName() != "guest"
+						&& api.getPassword() != "guest") {
+					session = new AccountSession(api.getUserName(),
+							api.getPassword());
 					api.setSessionToken(((AccountSession) session).getTkn());
-					while(((AccountSession) session).getTkn() == null)
-					{
+					while (((AccountSession) session).getTkn() == null) {
 						api.setUserName(null);
 						api.setPassword(null);
 						api.setSessionToken(null);
 						
 						logIn = new LogIn(api);
 						
-						if(api.getUserName() == null && api.getPassword() == null)
-						{
+						if (api.getUserName() == null
+								&& api.getPassword() == null) {
 							api.setUserName(tempUserName);
 							api.setPassword(tempPassword);
 							api.setSessionToken(tempSession);
 							
-							if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
-							{
+							if (api.getUserName().equalsIgnoreCase("guest")
+							  && api.getPassword().equalsIgnoreCase("guest")) {
 								session = new GuestSession();
-							}
-							else
-							{
-								session = new AccountSession(api.getUserName(), api.getPassword());
-								api.setSessionToken(((AccountSession) session).getTkn());	
+							} else {
+								session = new AccountSession(
+										api.getUserName(), api.getPassword());
+								api.setSessionToken(((AccountSession) 
+										session).getTkn());	
 							}
 							break;
-						}
-						else if(api.getUserName().equalsIgnoreCase("guest") && api.getPassword().equalsIgnoreCase("guest"))
-						{
+						} else if (api.getUserName().equalsIgnoreCase("guest")
+							&& api.getPassword().equalsIgnoreCase("guest")) {
 							session = new GuestSession();
 							break;
 						}
-						session = new AccountSession(api.getUserName(), api.getPassword());
-						api.setSessionToken(((AccountSession) session).getTkn());
+						session = new AccountSession(api.getUserName(),
+													 api.getPassword());
+						api.setSessionToken(((AccountSession)
+								session).getTkn());
 					}
-				}
-				else if(api.getUserName() == "guest" && api.getPassword() == "guest")
-				{
+				} else if (api.getUserName() == "guest"
+						&& api.getPassword() == "guest") {
 					session = new GuestSession();
 				}
 				
@@ -840,8 +842,7 @@ public class GUI {
 				if (lblString.equals("Top 20 Favorite Movies")) {
 					api.setMovieList(session.getFavorites());
 					fillMovieTable(api.getMovieList());
-				}
-				else if (lblString.equals("Top 20 WatchList Movies")) {
+				} else if (lblString.equals("Top 20 WatchList Movies")) {
 					api.setMovieList(session.getWatchList());
 					fillMovieTable(api.getMovieList());
 				} 
@@ -906,7 +907,8 @@ public class GUI {
 	        	
 	        	if (!movieID.equals("")) {
 	        		
-	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
+	        		session.setSelectedMovie(tmdbApi.getMovies().
+	        				getMovie(Integer.parseInt(movieID), "en"));
 	        		
 		        	frame.getContentPane().removeAll();
 					frame.getContentPane().revalidate();
@@ -936,7 +938,8 @@ public class GUI {
 			    
 			    if (!movieID.equals("")) {
 
-	        		session.setSelectedMovie(tmdbApi.getMovies().getMovie(Integer.parseInt(movieID), "en"));
+	        		session.setSelectedMovie(tmdbApi.getMovies().
+	        				getMovie(Integer.parseInt(movieID), "en"));
 	        		
 	        		
 		        	frame.getContentPane().removeAll();
@@ -958,8 +961,9 @@ public class GUI {
 		// Watch Trailer Button Listener (Release #2)
 		btnWatchTrailer.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				List<Video> videos = tmdbMovies.getVideos(session.getSelectedMovie().getId(), "en");
-				if(videos != null) {
+				List<Video> videos = tmdbMovies.getVideos(
+						session.getSelectedMovie().getId(), "en");
+				if (videos != null) {
 					if (0 == videos.size()) {
 						JOptionPane.showMessageDialog(frame,
 						        "No Trailer is Available for this video",
@@ -973,7 +977,8 @@ public class GUI {
 						v = iterator.next(); // Just gets first video available
 						//}
 						
-						String trailerPath = "https://www.youtube.com/embed/" + v.getKey();
+						String trailerPath = "https://www.youtube.com/embed/"
+												+ v.getKey();
 						
 						displayTrailer(trailerPath);
 					}

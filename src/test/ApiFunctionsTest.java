@@ -67,5 +67,25 @@ public class ApiFunctionsTest {
 		assertEquals("Ariel", apiF.getMovieInfo(2).substring(8, 13));
 		assertEquals("First Life", apiF.getMovieInfo(82960).substring(8, 18)); 
 	}
+	
+	/**
+	 * 1. Tests that the set password equals what is gotten.
+	 */
+	@Test
+	public final void testPassword() {
+		String pass = new String("password");
+		apiF.setPassword(pass);
+		assertEquals(pass, apiF.getPassword());
+	}
+	
+	/**
+	 * 1. Tests that the set password equals what is gotten.
+	 */
+	@Test
+	public final void testUsername() {
+		String user = new String("username");
+		apiF.setUserName(user);
+		assertEquals(user, apiF.getUserName());
+	}
 
 }

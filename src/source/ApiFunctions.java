@@ -1,6 +1,5 @@
 package source;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.config.Account;
 import info.movito.themoviedbapi.model.config.TokenAuthorisation;
 import info.movito.themoviedbapi.model.config.TokenSession;
-import info.movito.themoviedbapi.model.core.AccountID;
 import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.people.PersonCast;
 
@@ -25,17 +23,18 @@ import info.movito.themoviedbapi.model.people.PersonCast;
  * @author Caleb H, Justin N, Lourens W
  *
  */
-public final class ApiFunctions implements IApiFunctions {
-	/** String to store password. */
+public class ApiFunctions implements IApiFunctions {
+	
+	/** Declares String for password. */
 	private String password;
 	
-	/** String to store username. */
+	/** Declares String for userName. */
 	private String userName;
 	
-	/** List to store movies. */
+	/** Declares the movieList. */
 	private List<MovieDb> movieList;
 	
-	/** Session token object. */
+	/** Declares the sessionToken. */
 	private SessionToken sessionToken;
 	
 	/** tmdbApi object to access the database. */
@@ -52,7 +51,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param page of popular movies list
 	 * @return the list of popular movies from the requested page
 	 */
-	public List<MovieDb> getPopularMovies(final int page) {
+	public final List<MovieDb> getPopularMovies(final int page) {
 		List<MovieDb> pop = movies.getPopularMovies("en", page).getResults();
 		return pop;
 	}
@@ -63,7 +62,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param page of upcoming movies list
 	 * @return the list of upcoming movies from the requested page
 	 */
-	public List<MovieDb> getUpcomingMovies(final int page) {
+	public final List<MovieDb> getUpcomingMovies(final int page) {
 		List<MovieDb> upc = movies.getUpcoming("en", page).getResults();
 		return upc;
 	}
@@ -74,7 +73,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param page of top rated movies list
 	 * @return the list of top rated movies from the requested page
 	 */
-	public List<MovieDb> getTopRatedMovies(final int page) {
+	public final List<MovieDb> getTopRatedMovies(final int page) {
 		List<MovieDb> top = movies.getTopRatedMovies("en", page).getResults();
 		return top;
 	}
@@ -85,7 +84,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param page of now playing movies list
 	 * @return the list of now playing movies from the requested page
 	 */
-	public List<MovieDb> getNowPlayingMovies(final int page) {
+	public final List<MovieDb> getNowPlayingMovies(final int page) {
 		List<MovieDb> now = movies.getNowPlayingMovies("en", page).getResults();
 		return now;
 	}
@@ -97,7 +96,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param page of the search results movies list
 	 * @return the list of movies from the search on the requested page
 	 */
-	public List<MovieDb> getSearchRes(final String srch, final int page) {
+	public final List<MovieDb> getSearchRes(final String srch, final int page) {
 		List<MovieDb> searchRes = search.searchMovie(srch, 
 				0, "en", true, page).getResults();
 		return searchRes;
@@ -109,7 +108,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @param movieId number of the movie requested
 	 * @return String with the information
 	 */
-	public String getMovieInfo(final int movieId) {
+	public final String getMovieInfo(final int movieId) {
 		String movieInfo = new String("");
 		String castStr = new String("");
 		String genreStr = new String("");
@@ -156,48 +155,48 @@ public final class ApiFunctions implements IApiFunctions {
 	 * This method returns the user password string used to Login.
 	 * @return a string representing the password
 	 */
-	public String getPassword() {
+	public final String getPassword() {
 		return password;
 	}
 
 	/**	
 	 * This method is used to set the password.
-	 * @param pPassword A string representation of the password to set 
+	 * @param pass A string representation of the password to set 
 	 */
-	public void setPassword(final String pPassword) {
-		password = pPassword;
+	public final void setPassword(final String pass) {
+		password = pass;
 	}
 
 	/**
 	 * This method returns the user UserName used to Login.
 	 * @return a string representing the username
 	 */
-	public String getUserName() {
+	public final String getUserName() {
 		return userName;
 	}
 
 	/**
-	 * This method is used to set the username. 
-	 * @param pUserName A string representation of the username to set
+	 * This method is used to set the username.
+	 * @param user A string representation of the username to set
 	 */
-	public void setUserName(final String pUserName) {
-		userName = pUserName;
+	public final void setUserName(final String user) {
+		userName = user;
 	}
 
 	/**
 	 * This method Returns the active movie List.
 	 * @return the list of movies that has been set 
 	 */
-	public List<MovieDb> getMovieList() {
+	public final List<MovieDb> getMovieList() {
 		return movieList;
 	}
 
 	/**
 	 * This method is used to set the movieList.
-	 * @param pMovieList the List of movies to set
+	 * @param movList the List of movies to set
 	 */
-	public void setMovieList(final List<MovieDb> pMovieList) {
-		this.movieList = pMovieList;
+	public final void setMovieList(final List<MovieDb> movList) {
+		this.movieList = movList;
 	}
 
 	/**
@@ -206,73 +205,30 @@ public final class ApiFunctions implements IApiFunctions {
 	 * session ID
 	 * @return The session token that is used to work session specific methods  
 	 */
-	public SessionToken getSessionToken() {
+	public final SessionToken getSessionToken() {
 		
-		// There are two ways to generate session id
-		// Generating session id using only API
-		// calls (requires username and password)
+		// Generating session id
 		if (this.userName.equalsIgnoreCase("guest")
 				&& this.password.equalsIgnoreCase("guest")) {
 			return null;
 		}
 		TmdbAuthentication tmdbAuth = tmdbApi.getAuthentication();
-		TokenAuthorisation tokenAuth = tmdbAuth.getLoginToken(
-			tmdbAuth.getAuthorisationToken(), this.userName, this.password);
+		TokenAuthorisation tokenAuth
+			= tmdbAuth.getLoginToken(tmdbAuth.getAuthorisationToken(),
+					this.userName, this.password);
 		TokenSession tokenSession = tmdbAuth.getSessionToken(tokenAuth);
 		String sessionId = tokenSession.getSessionId();
-		SessionToken sessToken = new SessionToken(sessionId);
+		SessionToken sessionTkn = new SessionToken(sessionId);
 				
-		return sessToken;
+		return sessionTkn;
 	}
 	
 	/**
-	 * This method is used to set the sessionToken to the Field.
-	 * @param pSessionToken A session Token that has been made from 
-	 * logging in
+	 * THis method is used to set the sessionToken to the Field.
+	 * @param sessionTkn that has been made from logging in
 	 */
-	public void setSessionToken(final SessionToken pSessionToken) {
-		this.sessionToken = pSessionToken;
-	}
-
-	/**
-	 * This method Gets the favorites page of movies from a users SessionToken.
-	 * @param page of the favorites results movies list
-	 * @return the list of movies from the favorites on the requested page
-	 */
-	public List<MovieDb> getFavorites(final int page) {
-		List<MovieDb> upc;
-		if (this.sessionToken != null) {
-			TmdbAccount tmdbAccount = tmdbApi.getAccount();
-			Account act = tmdbAccount.getAccount(this.sessionToken);
-			AccountID actId = new AccountID(act.getId());
-			
-			upc = tmdbAccount.getFavoriteMovies(this.sessionToken,
-												actId).getResults();
-		} else {
-			upc =  new ArrayList<MovieDb>();
-		}
-		return upc;
-	}
-	
-	/**
-	 * This method Gets the watchlist page of movies from a users SessionToken.
-	 * @param page of the  watchlist results movies list
-	 * @return the list of movies from the  watchlist on the requested page
-	 */
-	public List<MovieDb> getWatchList(final int page) {
-		
-		List<MovieDb> upc;
-		if (this.sessionToken != null) {
-			TmdbAccount tmdbAccount = tmdbApi.getAccount();
-			Account act = tmdbAccount.getAccount(this.sessionToken);
-			AccountID actId = new AccountID(act.getId());
-			
-			upc = tmdbAccount.getWatchListMovies(this.sessionToken,
-												 actId, page).getResults();
-		} else {
-			upc =  new ArrayList<MovieDb>();
-		}
-		return upc;
+	public final void setSessionToken(final SessionToken sessionTkn) {
+		this.sessionToken = sessionTkn;
 	}
 	
 	/**
@@ -280,7 +236,7 @@ public final class ApiFunctions implements IApiFunctions {
 	 * @return a String representing the accountName
 	 * If sessionToken is NULL, then returns blank string
 	 */
-	public String getaccountName() {
+	public final String getaccountName() {
 
 		if (this.sessionToken != null) {
 			TmdbAccount tmdbAccount = tmdbApi.getAccount();
@@ -288,7 +244,7 @@ public final class ApiFunctions implements IApiFunctions {
 			String ret = new String("Hello " + act.getUserName());
 			return ret;
 		} else if (this.userName.equalsIgnoreCase("guest")
-					&& this.password.equalsIgnoreCase("guest")) {
+				&& this.password.equalsIgnoreCase("guest")) {
 			return "Hello Guest";
 		} else {
 			return "";

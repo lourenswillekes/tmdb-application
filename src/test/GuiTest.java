@@ -1,8 +1,5 @@
 package test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 
 import javax.swing.AbstractButton;
@@ -19,23 +16,12 @@ import source.GUI;
 public class GuiTest {
 
 	/**
-	 * Creates static GUI and calls Main.
-	 */
-	@Test
-	public final void testMain() {
-		GUI.main(new String[] {});
-	}
-
-	/**
 	 * Tests the constructor for GUI.
+	 * @throws IOException e
 	 */
 	@Test
-	public final void testGUI() {
-		try {
-			new GUI();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public final void testGUI() throws IOException {
+		new GUI();
 	}
 
 	/**
@@ -53,18 +39,6 @@ public class GuiTest {
 	public final void testSetButtonsFalse() {
 		GUI.setButtonsFalse();
 	}
-
-	/**
-	 * creates the GUI.
-	 */
-	@Test
-	public final void testCreateGUI() {
-		try {
-			GUI.createGUI();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Triggers the ButtonListeners to test the movie list functions.
@@ -72,13 +46,19 @@ public class GuiTest {
 	 */
 	@Test
 	public final void testGetMovieMethods() throws IOException {
+		
 		GUI g = new GUI();
+		
 		AbstractButton abRandom     = g.btnSelectRandom;
 		AbstractButton abNowPlaying = g.tglbtnNowPlaying;
 		AbstractButton abPopular    = g.tglbtnPopular;
 		AbstractButton abTopRated   = g.tglbtnTopRated;
 		AbstractButton abUpcoming   = g.tglbtnUpcoming;
 		AbstractButton abSearch     = g.tglbtnSearch;
+		AbstractButton abFavorites  = g.tglbtnFavorites;
+		AbstractButton abWatchList  = g.tglbtnWatchList;
+		AbstractButton abAddRmFav   = g.btnAddRmFav;
+		AbstractButton abAddRmWatch = g.btnAddRmWatch;
 		
 		abNowPlaying.doClick();
 		abRandom.doClick();
@@ -96,6 +76,13 @@ public class GuiTest {
 		abUpcoming.doClick();
 		abRandom.doClick();
 		
+		abFavorites.doClick();
+		abAddRmFav.doClick();
+		abRandom.doClick();
+		
+		abWatchList.doClick();
+		abAddRmWatch.doClick();
+		abRandom.doClick();
 	}
 	
 

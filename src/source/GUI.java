@@ -63,10 +63,10 @@ public class GUI {
 	public static JButton btnWatchTrailer;
 	
 	/** Add to favorites button (Release #2). */
-	private static JButton btnAddRmFav;
+	public static JButton btnAddRmFav;
 	
 	/** Add to watch list button (Release #2). */
-	private static JButton btnAddRmWatch;
+	public static JButton btnAddRmWatch;
 	
 	/** Select random movie from list button. */
 	public static JButton btnSelectRandom;

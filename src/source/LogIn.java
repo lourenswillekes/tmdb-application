@@ -2,19 +2,14 @@ package source;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
-import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;

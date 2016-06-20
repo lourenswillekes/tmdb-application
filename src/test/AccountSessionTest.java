@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -31,10 +32,14 @@ public class AccountSessionTest {
 	private MovieDb latest = movies.getLatestMovie();
 	
 	/**
-	 * 1. Tests that as is not null.
+	 * 1. Tests that the tkn is null.
+	 * 2. Tests that as is not null.
 	 */
 	@Test
 	public final void testAccountSession() {
+		as = new AccountSession("testaccout73", "wrongpassword");
+		assertNull(as.getTkn());
+		
 		as = new AccountSession("testaccount73", "passNEWword");
 		assertNotNull(as);
 	}

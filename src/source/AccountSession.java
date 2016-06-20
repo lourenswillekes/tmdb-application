@@ -41,12 +41,9 @@ public class AccountSession implements ISession {
 		final TmdbApi api = new TmdbApi("34b0b2ee2ac7865db7bd356da1221847");
 		final TmdbAuthentication tmdbAuth = api.getAuthentication();
 		TokenSession sess = new TokenSession();
-		try
-		{
+		try {
 			sess = tmdbAuth.getSessionLogin(username, password);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			setTkn(null);
 			return;
 		}
@@ -147,19 +144,19 @@ public class AccountSession implements ISession {
 	}
 
 	/**
-	 * This Method returns the Session Token Field
+	 * This Method returns the Session Token Field.
 	 * @return the Session Token Object, stored by the tkn Field
 	 */
-	public SessionToken getTkn() {
+	public final SessionToken getTkn() {
 		return tkn;
 	}
 
 	/**
-	 * This method allows to set the Session Token field
-	 * @param tkn the Session Token to be set
+	 * This method allows to set the Session Token field.
+	 * @param tokn the Session Token to be set
 	 */
-	public void setTkn(SessionToken tkn) {
-		this.tkn = tkn;
+	public final void setTkn(final SessionToken tokn) {
+		this.tkn = tokn;
 	}
 
 }
